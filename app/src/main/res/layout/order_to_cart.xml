@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    style="@style/AndroidImageSlider_Attractive_Rect_Blue"
+    android:layout_height="match_parent">
+
+
+
+    <ImageView
+        android:id="@+id/img_icon"
+        android:layout_width="112dp"
+        android:layout_height="112dp"
+        android:scaleType="fitXY"
+        />
+
+    <RelativeLayout
+        android:id="@+id/rel_lay1"
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:background="#77ffffff"
+        android:layout_toRightOf="@+id/img_icon"
+        android:layout_height="112dp">
+
+
+        <TextView
+            android:id="@+id/txt_item_name"
+            android:layout_width="120dp"
+            android:layout_alignParentLeft="true"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:scrollHorizontally="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginLeft="5dp"
+            android:singleLine="true"
+            android:textColor="#fff"
+            android:layout_height="wrap_content"
+            android:text="val"/>
+
+        <TextView
+            android:id="@+id/txt_price"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="val"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="#77ffffff"
+
+            android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_below="@+id/txt_item_name"
+            android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Item Quantity:"
+            android:textSize="20dp"
+            android:textColor="#fff"
+            android:layout_margin="5dp"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="60dp"
+            android:layout_alignParentRight="true"
+            style="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar"
+            android:layout_margin="5dp"
+
+            android:layout_centerVertical="true"
+            android:layout_height="60dp"></Spinner>
+<!--
+            <NumberPicker
+                android:id="@+id/numberPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:orientation="vertical" />-->
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+   <!-- <RelativeLayout
+        android:id="@+id/rel_lay2"
+        android:layout_below="@+id/img_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numberPicker"
+            android:scaleX=".01"
+            android:scaleY=".01"
+          />
+
+
+    </RelativeLayout>-->
+
+
+
+
+</RelativeLayout>

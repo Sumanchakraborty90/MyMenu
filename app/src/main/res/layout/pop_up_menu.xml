@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Add"/>
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="40dp"
+        android:layout_below="@+id/btn_add"
+        android:layout_centerHorizontal="true"
+        style="@style/Base.Widget.AppCompat.Spinner"
+        android:layout_height="30dp"></Spinner>
+
+</RelativeLayout>

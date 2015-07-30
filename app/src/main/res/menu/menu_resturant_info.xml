@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.bitcanny.office.mymenu.ResturantInfo">
+   <!-- <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />-->
+
+    <item
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/action_logIn"
+        android:orderInCategory="100"
+        android:title="LogIn"
+        app:showAsAction="always"
+        android:icon="@drawable/login148"
+        />
+</menu>

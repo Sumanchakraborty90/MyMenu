@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">MyMenu</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="str_open">Open</string>
+    <string name="str_close">Close</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="title_activity_place_order">PlaceOrderActivity</string>
+        <string name="title_activity_menu_main_category">Cuisines</string>
+        <string name="title_activity_main_menu_category">Cuisines</string>
+        <string name="title_activity_bar_code">BarCodeActivity</string>
+        <string name="title_activity_resturant_info">ResturantInfo</string>
+        <string name="title_activity_resturant_map">ResturantMap</string>
+        <string name="title_activity_my_favourites">MyFavourites</string>
+        <string name="title_activity_my_place_order">MyPlaceOrder</string>
+        <string name="title_activity_chefs_recomendation">ChefsRecomendation</string>
+        <string name="title_activity_order_to_cart">OrderToCartActivity</string>
+        <string name="title_activity_cart_order">CartOrderActivity</string>
+        <string name="title_activity_registration">Registration</string>
+    <string name="title_activity_login">LogIn</string>
+</resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pop_up_lay"
+    android:layout_width="match_parent"
+        android:background="@drawable/white_bg"
+    android:alpha=".97"
+    android:layout_height="match_parent">
+      <!--  <ImageView
+            android:id="@+id/cross"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/cross48"/>-->
+
+    <include layout="@layout/app_tool" android:id="@+id/app_tl"></include>
+    <RelativeLayout
+        android:id="@+id/rel1"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/app_tl"
+
+        android:layout_marginBottom="40dp"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="#000"
+            android:textSize="30dp"
+            android:text="Log In"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rel2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:layout_centerInParent="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/rel1">
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/edit_text"
+            android:hint="Email/LogIn Id"/>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/email"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/edit_text"
+            android:hint="Password"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/submit"
+        android:text="Submit"
+        android:layout_width="wrap_content"
+        android:background="@drawable/simple_button"
+        android:layout_below="@+id/rel2"
+
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppTheme.Base">
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+
+
+
+
+
+    </style>
+
+    <style name="MyCustomStyle" parent="ThemeOverlay.AppCompat.Light">
+
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="android:textColor">@color/textPrimary</item>
+
+
+    </style>
+    <style name="MyBack" >
+
+        <item name="android:textColorPrimary">@drawable/grid_item_style</item>
+
+    </style>
+
+</resources>

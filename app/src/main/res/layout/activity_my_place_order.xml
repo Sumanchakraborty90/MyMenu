@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/white_bg"
+    tools:context="com.bitcanny.office.mymenu.MyPlaceOrderActivity">
+
+    <include layout="@layout/app_tool" android:id="@+id/app_val"></include>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/app_val"></ListView>
+
+</RelativeLayout>

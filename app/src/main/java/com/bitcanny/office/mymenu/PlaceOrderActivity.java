@@ -5,16 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,14 +24,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +47,10 @@ public class PlaceOrderActivity extends ActionBarActivity {
     private static String RESTAURANTRATINGRATE = "RestaurantRatingRate";
     private static String RESTAURANTRATINGREVIEW = "RestaurantRatingReview";
     private static String RESTAURANTRATINGADDBY = "RestaurantRatingAddby";
+
     //private static String TYPE = "type";
     private static String MESSAGE = "message";
+    String selectedItems="0";
 
     ProgressDialog dialog;
 
@@ -79,7 +77,7 @@ public class PlaceOrderActivity extends ActionBarActivity {
 
     ProgressBar progressBar;
     ImageView img_view1,open_img1,open_img2,open_img3,img_add;
-    TextView txt_fd_price,txt_fd_name,abt_the_food,txt_abt;
+    TextView txt_fd_price,txt_fd_name,abt_the_food,txt_abt,txt_more,txt_item_select;
     EditText edt_name,edt_comment;
     LinearLayout rel_lay6;
     RelativeLayout rel_lay4,rel_val,rel_lay2,rel_lay3,rel_lay5;
@@ -87,6 +85,8 @@ public class PlaceOrderActivity extends ActionBarActivity {
     String imageUrl,price,food_name,food_description;
     boolean imgFlag1=false,imgFlag2=false,imgFlag3=false;
     ListView listView;
+    String position;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,34 +118,78 @@ public class PlaceOrderActivity extends ActionBarActivity {
         rel_lay2 = (RelativeLayout) findViewById(R.id.rel_lay2);
         rel_lay3= (RelativeLayout) findViewById(R.id.rel_lay3);
         rel_lay5= (RelativeLayout) findViewById(R.id.rel_lay5);
+        txt_more = (TextView) findViewById(R.id.txt_more);
+        txt_item_select = (TextView) findViewById(R.id.txt_item_select);
         maps  = new ArrayList<>();
 
-        Bundle bundle = getIntent().getExtras();
-        sharedPreferences = getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
-        price = bundle.getString("price");
-        imageUrl  = bundle.getString("image");
-        food_name= bundle.getString("food_name");
-        food_description =bundle.getString("food_description");
+            Bundle bundle = getIntent().getExtras();
+            sharedPreferences = getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
+            try {
+                price = bundle.getString("price");
+                imageUrl = bundle.getString("image");
+                food_name = bundle.getString("food_name");
+                food_description = bundle.getString("food_description");
+                position = bundle.getString("position");
+                selectedItems = bundle.getString("amount");
+            }catch (Exception e){
 
-        txt_fd_price.setText("Rs " + price);
-        txt_fd_name.setText(food_name);
-        txt_abt.setText(food_description);
+                e.printStackTrace();
+            }
+          //  if(price!="" || price!=null) {
 
+        try {
+            if (bundle != null) {
+
+                putSharedPreferenceOfAllData(price, imageUrl, food_name, food_description, position, selectedItems);
+            }
+
+            // }
+
+            if (bundle == null ) {
+
+                price = sharedPreferences.getString("price", "");
+                imageUrl = sharedPreferences.getString("image", "");
+                food_name = sharedPreferences.getString("food_name", "");
+                food_description = sharedPreferences.getString("food_description", "");
+                position = sharedPreferences.getString("position", "");
+                selectedItems = sharedPreferences.getString("amount", "");
+
+
+            }
+
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+            txt_fd_price.setText("Rs " + price);
+            txt_fd_name.setText(food_name);
+            txt_abt.setText(food_description);
+           // txt_item_select.setText(selectedItems);
+
+        txt_item_select.setText(String.valueOf(dao.getUpdatedSelectedItems(food_name)));
 
         //OrderToCartAdapterModel model = new OrderToCartAdapterModel();
 
 
 
+        try {
+            Picasso.with(PlaceOrderActivity.this)
+                /*.load(JsonFunctions.BASE_URL + imageUrl)*/
 
-        Picasso.with(PlaceOrderActivity.this)
-                .load(JsonFunctions.BASE_URL + imageUrl)
-                .placeholder(R.mipmap.ic_launcher) // optional
-                .error(R.mipmap.ic_launcher)
-                .into(img_view1);
+                    .load(new File(getFromSdcard("/MenuApp/MenuItemGrid/").get(Integer.valueOf(position))))
+                    .placeholder(R.mipmap.ic_launcher) // optional
+                    .error(R.mipmap.ic_launcher)
+                    .into(img_view1);
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
 
         progressBar.setVisibility(View.GONE);
 
-        new GetReviewRating().execute();
+       // new GetReviewRating().execute();
 
 
 
@@ -176,7 +220,7 @@ public class PlaceOrderActivity extends ActionBarActivity {
 
                 }else if(sharedPreferences.getString("email", "").equals("1") || sharedPreferences.getString("password","").equals("1")) {
 */
-                try {
+              /*  try {
                    // dao.createTable();
                     Map<String,String> map = new HashMap<String, String>();
 
@@ -195,7 +239,7 @@ public class PlaceOrderActivity extends ActionBarActivity {
                 }catch (Exception e){
 
                     e.printStackTrace();
-                }
+                }*/
               /*  }*/
             }
         });
@@ -231,7 +275,16 @@ public class PlaceOrderActivity extends ActionBarActivity {
             }
         });
 
-       // new GetReviewRating().execute();
+
+        txt_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(PlaceOrderActivity.this,ReviewRatingActivity.class);
+                startActivity(intent);
+            }
+        });
+        new GetReviewRating().execute();
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -277,6 +330,29 @@ public class PlaceOrderActivity extends ActionBarActivity {
         editor.putString("password", password);
 
         editor.commit();
+
+    }
+
+    public void putSharedPreferenceOfAllData(String price,String imageUrl,String food_name,String food_description,String position,String  selectedItems){
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+/*
+        price = bundle.getString("price");
+        imageUrl = bundle.getString("image");
+        food_name = bundle.getString("food_name");
+        food_description = bundle.getString("food_description");
+        position = bundle.getString("position");
+        selectedItems  = bundle.getString("amount");*/
+        editor.putString("price",price);
+        editor.putString("image",imageUrl);
+        editor.putString("food_name",food_name);
+        editor.putString("food_description",food_description);
+        editor.putString("position",position);
+        editor.putString("amount",selectedItems);
+
+        editor.commit();
+
 
     }
 
@@ -486,7 +562,8 @@ public class PlaceOrderActivity extends ActionBarActivity {
 
                         JSONArray array = info.getJSONArray(REVIEWINFO);
 
-                        for(int index = 0;index <array.length();index++){
+                        for(int index = 0;index <2;index++){
+
                             JSONObject jsonObject = array.getJSONObject(index);
 
                             RestaurantRatingRate = jsonObject.getString(RESTAURANTRATINGRATE);
@@ -579,4 +656,28 @@ public class PlaceOrderActivity extends ActionBarActivity {
                 return null;
             }
         }
+    public List<String> getFromSdcard(String path)
+    {
+        ArrayList<String> f = new ArrayList<String>();
+        File[] listFile;
+        File file= new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+path);
+
+        if (file.isDirectory())
+        {
+            listFile = file.listFiles();
+
+
+            for (int i = 0; i < listFile.length; i++)
+            {
+
+                f.add(listFile[i].getAbsolutePath());
+
+                Log.d("val",listFile[i].getAbsolutePath());
+
+            }
+        }
+
+        return  f;
+    }
+
 }

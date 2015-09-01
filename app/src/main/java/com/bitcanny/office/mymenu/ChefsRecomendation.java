@@ -1,22 +1,23 @@
 package com.bitcanny.office.mymenu;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
-
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,24 +38,53 @@ public class ChefsRecomendation extends ActionBarActivity {
     public static String TYPE = "type";
     Toolbar toolbar;
 
+    PlaceOrderSqlHelperDao dao;
     String MenuItemImageURL,MenuItemName,MenuItemPrice,returnVal;
     List<Map<String,String>> maps = new ArrayList<>();
 
     ProgressBar progressBar;
     ListView listView;
+    SharedPreferences sharedPreferences;
+    private static String MYPREF = "mypref";
+    String category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chefs_recomendation_main);
-
+        dao = new PlaceOrderSqlHelperDao(this);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         listView = (ListView)findViewById(R.id.list);
         toolbar = (Toolbar) findViewById(R.id.app_tl);
 
+        sharedPreferences = getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         new GetChefsRecomendation().execute();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            /*    for(int index= 0; index<dao.getMenuDetailsRespectToChefsRecomendation().size() ; index++){
+
+                    if(index == position){*/
+
+                        Intent intent = new Intent(ChefsRecomendation.this, MainActivity.class);
+
+                        // intent.putExtra("category_name",arrayList.get(position).get(CATEGORYNAME));
+
+                        putCategory(dao.getMenuDetailsRespectToChefsRecomendation().get(position).getCategory_name());
+                        startActivity(intent);
+                   /* }*/
+
+
+
+
+                /*}*/
+
+            }
+        });
 
     }
 
@@ -65,6 +95,15 @@ public class ChefsRecomendation extends ActionBarActivity {
         return true;
     }
 
+    public void putCategory(String categoryName){
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("category_name",categoryName);
+
+
+        editor.commit();
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -87,7 +126,7 @@ public class ChefsRecomendation extends ActionBarActivity {
             @Override
             protected Void doInBackground(Void... params) {
 
-                ServiceHandler handler = new ServiceHandler();
+           /*     ServiceHandler handler = new ServiceHandler();
                 JsonFunctions jsonFunctions = new JsonFunctions(handler);
                 try {
                     String json = jsonFunctions.getChefsrecommendation("1");
@@ -127,8 +166,29 @@ public class ChefsRecomendation extends ActionBarActivity {
                 }catch (Exception e){
                     //Toast.makeText(ChefsRecomendation.this,"No Network Please Check Internet",Toast.LENGTH_LONG).show();
                      e.printStackTrace();
-                }
+                }*/
 
+
+               // dao.getMenuDetailsRespectToChefsRecomendation();
+
+                for(int index = 0;index<dao.getMenuDetailsRespectToChefsRecomendation().size();index++){
+
+
+                    Map<String,String> map = new HashMap<>();
+
+                    map.put(MENUITEMIMAGEURL, dao.getMenuDetailsRespectToChefsRecomendation().get(index).getMenuItemImageURL());
+
+                    if(dao.getMenuDetailsRespectToChefsRecomendation().size()!=getFromSdcard("/MenuApp/MenuCategory/chefsRecomendation").size()) {
+                        ResturantEntryActivity.DownloadFromUrl("/MenuApp/MenuCategory/chefsRecomendation", index + ".jpg", JsonFunctions.BASE_URL + dao.getMenuDetailsRespectToChefsRecomendation().get(index).getMenuItemImageURL());
+                    }
+                    map.put(MENUITEMNAME,dao.getMenuDetailsRespectToChefsRecomendation().get(index).getMenuItemName());
+                    map.put(MENUITEMPRICE,dao.getMenuDetailsRespectToChefsRecomendation().get(index).getMenuItemPrice());
+                    //map.put("")
+
+
+                    maps.add(map);
+
+                }
 
                 return null;
             }
@@ -142,14 +202,38 @@ public class ChefsRecomendation extends ActionBarActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                if(returnVal.equals("success")) {
-
+               /* if(returnVal.equals("success")) {
+*/
                     progressBar.setVisibility(View.GONE);
 
-                    ArrayAdapter adapter =new ChefsRecomendationAdapter(ChefsRecomendation.this,0,maps);
-                    listView.setAdapter(adapter);
+                    ArrayAdapter adapter =new ChefsRecomendationAdapter(ChefsRecomendation.this,0, maps);
+                listView.setAdapter(adapter);
 
-               }
+             /*  }*/
             }
         }
+
+    public List<String> getFromSdcard(String path)
+    {
+        ArrayList<String> f = new ArrayList<String>();
+        File[] listFile;
+        File file= new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+path);
+
+        if (file.isDirectory())
+        {
+            listFile = file.listFiles();
+
+
+            for (int i = 0; i < listFile.length; i++)
+            {
+
+                f.add(listFile[i].getAbsolutePath());
+
+                Log.d("val", listFile[i].getAbsolutePath());
+
+            }
+        }
+
+        return  f;
+    }
 }

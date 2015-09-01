@@ -30,11 +30,22 @@
 
                 android:layout_height="match_parent">
 
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view"
+                    android:elevation="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:background="#fff"
+
+                        android:layout_height="wrap_content">
                 <RelativeLayout
                     android:id="@+id/lin_lay1"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:orientation="vertical">
+                   >
 
                     <ImageView
                         android:id="@+id/img_view1"
@@ -54,15 +65,16 @@
                     <ProgressBar
                         android:id="@+id/prg_bar"
                         android:layout_width="wrap_content"
+                        android:visibility="gone"
                         style="@style/Base.Widget.AppCompat.ProgressBar"
                         android:layout_height="wrap_content" />
-                   <!-- <ImageView
+                    <ImageView
                         android:id="@+id/img_view2"
                         android:layout_width="match_parent"
-                        android:layout_below="@+id/img_view1"
-                        android:rotation="180"
+                        android:layout_alignParentBottom="true"
+
                         android:layout_height="30dp"
-                        android:background="@drawable/img_shadow"/>-->
+                        android:background="@drawable/img_shadow"/>
 
                 </RelativeLayout>
 
@@ -160,15 +172,29 @@
                         />
 
                 </LinearLayout>
+                    </RelativeLayout>
 
-
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view1"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/card_view"
+                    android:layout_marginTop="1dp"
+                    android:elevation="5dp"
+                    android:background="#fff"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                      android:background="#fff"
+                        android:gravity="center"
+                        android:layout_height="wrap_content">
                 <RelativeLayout
                     android:id="@+id/rel_lay2"
                     android:layout_width="match_parent"
-                    android:layout_below="@+id/lin_lay2"
+
                     android:layout_margin="5dp"
                     android:padding="5dp"
-                    android:background="#FFF"
+                    android:background="@drawable/increment_decrement_focus"
                     android:alpha=".47"
                     android:layout_height="wrap_content">
 
@@ -202,16 +228,27 @@
                         />
 
                 </RelativeLayout>
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/card_view1"
+                    android:layout_marginTop="1dp"
+                    android:elevation="5dp"
+                    android:layout_height="wrap_content">
 
-
-
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:background="#fff"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content">
                 <RelativeLayout
                     android:id="@+id/rel_lay3"
                     android:layout_width="match_parent"
-                    android:layout_below="@+id/rel_lay2"
+
                     android:layout_margin="5dp"
                     android:padding="5dp"
-                    android:background="#FFF"
+                    android:background="@drawable/increment_decrement_focus"
                     android:alpha=".47"
                     android:layout_height="wrap_content">
 
@@ -235,6 +272,8 @@
 
 
                 </RelativeLayout>
+
+
                 <RelativeLayout
                     android:id="@+id/rel_lay4"
                     android:layout_width="match_parent"
@@ -252,15 +291,31 @@
                    >
 
                 </ListView>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/txt_more"
+                        android:layout_width="wrap_content"
+                        android:textColor="#000"
+                        android:text="More..."
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_height="wrap_content" />
                 </RelativeLayout>
+                </RelativeLayout>
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
                 <RelativeLayout
                     android:id="@+id/rel_lay5"
                     android:layout_width="match_parent"
                     android:layout_margin="5dp"
                     android:padding="5dp"
-                    android:layout_below="@+id/rel_lay4"
+                    android:layout_below="@+id/card_view1"
                     android:background="#FFF"
                     android:alpha=".47"
+                    android:visibility="gone"
                     android:layout_height="wrap_content">
 
                     <TextView
@@ -330,20 +385,34 @@
         </ScrollView>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:layout_height="100dp">
         <ImageView
             android:id="@+id/img_add"
             android:layout_width="wrap_content"
 
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
 
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="15dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/add48"
+            android:background="@drawable/suman"
+
             android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/txt_item_select"
+                android:textColor="#fff"
+                android:textSize="10dp"
+                android:layout_marginTop="36dp"
+                android:layout_marginRight="30dp"
+
+                android:layout_alignParentRight="true"
+                android:text="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </RelativeLayout>
     </RelativeLayout>

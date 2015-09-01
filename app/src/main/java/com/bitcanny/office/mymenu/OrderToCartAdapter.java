@@ -13,7 +13,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by OFFICE on 21-07-2015.
@@ -46,10 +45,10 @@ public class OrderToCartAdapter extends ArrayAdapter {
 
         Spinner spinner = (Spinner) convertView.findViewById(R.id.spinner);
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context,
+       /* ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context,
                 android.R.layout.simple_spinner_item, getItems());
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
+        spinner.setAdapter(dataAdapter);*/
 
         Picasso.with(context).load(JsonFunctions.BASE_URL+maps.get(position).getOrder_item_image_url())
                 .placeholder(R.mipmap.ic_launcher)

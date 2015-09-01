@@ -11,6 +11,6 @@
         layout="@layout/app_tool"/>
 
     <include layout="@layout/navigation_drawer"></include>
-
+    
 
 </LinearLayout>

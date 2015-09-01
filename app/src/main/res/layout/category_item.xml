@@ -1,54 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
 
-    android:background="@drawable/focusable_color"
 
-    android:layout_height="130dp" >
-    <RelativeLayout
-        android:id="@+id/rel1"
-        android:layout_width="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_height="130dp">
-    <ImageView
-        
-        android:id="@+id/img_cat"
-        android:layout_width="130dp"
-        android:layout_height="120dp"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:elevation="5dp"
+
+        id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        card_view:cardCornerRadius="2dp"
         >
 
-    </ImageView>
-    </RelativeLayout>
+
         <RelativeLayout
-            android:id="@+id/rel2"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/rel1"
-            android:layout_centerVertical="true"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:background="#fff"
-            android:layout_height="120dp">
-    
-    <TextView
-        android:id="@+id/btn_cat_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:textColor="#000"
-        android:layout_centerHorizontal="true"
-        android:textSize="25dp"
-        android:layout_gravity="bottom"
+            android:padding="3dp"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/rel_img"
+                android:layout_width="150dp"
+                android:layout_height="75dp">
+            <android.support.v7.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view1="http://schemas.android.com/apk/res-auto"
+                android:elevation="5dp"
+
+                id="@+id/card_view1"
+                android:layout_gravity="left"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                card_view:cardCornerRadius="2dp"
+
+                >
+            <ImageView
+                android:id="@+id/img_cat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
 
+                />
+            </android.support.v7.widget.CardView>
 
-        android:text="val"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+
+                android:layout_toRightOf="@+id/rel_img">
+
+                <TextView
+                    android:id="@+id/btn_cat_name"
+                    android:layout_width="wrap_content"
+                    android:textColor="#000"
+                    android:text="value"
+                    android:textSize="25dp"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/txt_doc_number"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@+id/btn_cat_name"
+                    android:textColor="#fca6a8a8"
+                    android:text="value"
+                    android:textSize="13dp"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+
+                android:layout_centerVertical="true"
+                android:background="@drawable/img"/>
         </RelativeLayout>
 
+
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

@@ -2,6 +2,32 @@ package com.bitcanny.office.mymenu;
 
 
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.apache.http.util.ByteArrayBuffer;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,39 +42,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 /*import com.bitcanny.Jsonutility.JsonFunctions;
 import com.bitcanny.Jsonutility.ServiceHandler;
 import com.bitcanny.utility.ResEntryModel;
 import com.google.android.gms.internal.ft;*/
-
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.Intent;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 
 
@@ -83,7 +80,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 	private static String RESTAURANTPHONE2 = "RestaurantPhone2";
 	private static String RESTAURANTPOSTCODE = "RestaurantPostCode";
 	private static String RESTAURANTSTATE = "RestaurantState";
-	private static String MenuItemDesc = "MenuItemDesc";
+	//private static String MenuItemDesc = "MenuItemDesc";
 	private static String LATLONGINFO = "latLongInfo";
 	private static String RESTAURANTDESCRIPTION = "RestaurantDescription";
 	
@@ -102,6 +99,24 @@ public class ResturantEntryActivity extends MainActivityqr{
 	private static String RESTAURANTRATINGID = "RestaurantRatingID";
 	private static String RESTAURANTRATINGRATE = "RestaurantRatingRate";
 	private static String RESTAURANTRATINGREVIEW= "RestaurantRatingReview";
+
+	private static String CATEGORYINFO = "categoryInfo";
+	private static String CATEGORYID = "CategoryID";
+	private static String CATEGORYIMAGEURL = "CategoryImageURL";
+	private static String CATEGORYNAME = "CategoryName";
+
+	//private static String MENUINFO = "menuInfo";
+	private static String AVGRATING = "avg_rating";
+	private static String MENUITEMDESC = "MenuItemDesc";
+	private static String MENUITEMID = "MenuItemID";
+	private static String MENUITEMIMAGEURL = "MenuItemImageURL";
+	private static String MENUITEMISCHEFRECOMMEND = "MenuItemIsChefRecommend";
+	private static String MENUITEMNAME = "MenuItemName";
+	private static String MENUITEMPRICE = "MenuItemPrice";
+	//private static String TAGNAME = "TagName";
+
+	String CategoryID,CategoryImageURL,CategoryName;
+	String MenuItemDesc,MenuItemID,MenuItemImageURL,MenuItemIsChefRecommend,MenuItemName,MenuItemPrice,avg_rating;
 	
 	private static String LAT = "lat";
 	private static String LNG = "lng";
@@ -134,6 +149,11 @@ public class ResturantEntryActivity extends MainActivityqr{
 	String RestaurantImageUrl;
 	PlaceOrderSqlHelperDao dao;
 	ResturantModel model;
+
+	private static String MYPREF = "mypref";
+	private static String RESTURANT_CODE = "resturant_code";
+	private static  String PASSWORD = "password";
+	SharedPreferences sharedPreferences;
 	//static ResEntryModel entryModel = new ResEntryModel();
 	DatabaseSQL sql;
 	@Override
@@ -147,6 +167,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 		//entryModel.setModel(entryModel);
 		dao = new PlaceOrderSqlHelperDao(this);
 		btn_submit = (Button) findViewById(R.id.btn_submit);
+		sharedPreferences = getSharedPreferences(MYPREF,Context.MODE_PRIVATE);
 		img_cam = (ImageButton) findViewById(R.id.img_cam);
 		edt_rest_code = (EditText) findViewById(R.id.edt_rest_code);
 		lbl_bitcanny = (TextView) findViewById(R.id.lbl_bitcanny);
@@ -155,6 +176,64 @@ public class ResturantEntryActivity extends MainActivityqr{
 		 list = new ArrayList<Map<String, String>>();
 		 list1 = new ArrayList<>();
 
+
+		if(sharedPreferences.getString("resturant_code", "").equals("")) {
+
+
+		}else{
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						if (getFromSdcard("/MenuApp/Resturant/").size() == dao.getSliderImageUrl().size()) {
+
+							for (int index = 0; index < dao.getSliderImageUrl().size(); index++) {
+
+								DownloadFromUrl("/MenuApp/Resturant/", index + ".jpg", JsonFunctions.BASE_URL + dao.getSliderImageUrl().get(index).getSlider_image_url());
+
+							}
+
+						}
+
+					} catch (Exception e) {
+
+						e.printStackTrace();
+					}
+
+				}
+			}).start();
+
+
+
+			/*try {
+
+				for(int index = 0;index<dao.getAllOrderDetails().size();index++){
+
+
+					dao.updateSelectedItems(dao.getAllOrderDetails().get(index).getOrder_name(),"0");
+
+
+				}
+				for (int index = 0; index < dao.getMEnuSize().size(); index++) {
+
+					Log.d("ValueUpdatedBitcanny", index + "");
+
+
+					int a=dao.updateSelectedItemsInMenu(dao.getMEnuSize().get(index).getMenuItemName(), "0");
+
+					Log.d("ValueUpdatedvalue", dao.getUpdatedSelectedItemsMenu(dao.getMEnuSize().get(index).getMenuItemName()) + "");
+
+					Log.d("ValueUpdatedValueBitca", a+"");
+
+				}
+
+
+
+			}catch (Exception e){
+				e.printStackTrace();
+			}*/
+			Intent intent = new Intent(ResturantEntryActivity.this,ResturantInfo.class);
+			startActivity(intent);
+		}
 		edt_rest_code.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
 			@Override
@@ -163,7 +242,10 @@ public class ResturantEntryActivity extends MainActivityqr{
 				if ((actionId & EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_DONE) {
 					resturantCode = edt_rest_code.getText().toString();
 					hideKeyboard();
-					new CheckResturantCode().execute();
+
+
+						new CheckResturantCode().execute();
+
 					return true;
 				}
 				return false;
@@ -176,7 +258,10 @@ public class ResturantEntryActivity extends MainActivityqr{
 				
 				resturantCode = edt_rest_code.getText().toString();
 				hideKeyboard();
-				new CheckResturantCode().execute();
+
+
+					new CheckResturantCode().execute();
+				//finish();
 				//new MyAsnyc().execute();
 
 				/*for(int index=0;index<list2.size();index++) {
@@ -292,12 +377,56 @@ public class ResturantEntryActivity extends MainActivityqr{
 					restaurantPhone1,restaurantPhone2,restaurantPostCode,restaurantAddress,restaurantState,restaurantDescription));
 			resturantModel = setValue(resturantModel);
 			//liteClass.AddResturantValues(resturantModel);
-			JSONObject latLong = info.getJSONObject(LATLONGINFO);
-			
-			lat = latLong.getString(LAT);
-			lng = latLong.getString(LNG);
-			
-			
+
+			try {
+				JSONObject latLong = info.getJSONObject(LATLONGINFO);
+
+				lat = latLong.getString(LAT);
+				lng = latLong.getString(LNG);
+
+				dao.addToLatLng(new LatLngModel(lat, lng, resturantId));
+			}catch (Exception e){
+
+				e.printStackTrace();
+			}
+			//////////////////////////////////////////////Category json\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+			JSONArray categoryInfoVal = info.getJSONArray(CATEGORYINFO);
+
+			for(int index = 0;index < categoryInfoVal.length();index++){
+
+				JSONObject object1 = categoryInfoVal.getJSONObject(index);
+
+				CategoryID = object1.getString(CATEGORYID);
+				CategoryImageURL = object1.getString(CATEGORYIMAGEURL);
+				CategoryName = object1.getString(CATEGORYNAME);
+				Log.d("val",CategoryImageURL);
+				dao.addToCategory(new CategoryModel(CategoryImageURL,CategoryName));
+				JSONObject menuInfo = object1.getJSONObject(MENUINFO);
+
+				JSONArray menuInfoJSONArray = menuInfo.getJSONArray(INFO);
+
+				for(int index1 = 0 ; index1<menuInfoJSONArray.length() ;index1++){
+
+					JSONObject jsonObject = menuInfoJSONArray.getJSONObject(index1);
+					avg_rating = jsonObject.getString(AVGRATING);
+					MenuItemDesc = jsonObject.getString(MENUITEMDESC);
+					MenuItemID = jsonObject.getString(MENUITEMID);
+					MenuItemImageURL =jsonObject.getString(MENUITEMIMAGEURL);
+					MenuItemIsChefRecommend = jsonObject.getString(MENUITEMISCHEFRECOMMEND);
+					MenuItemName = jsonObject.getString(MENUITEMNAME);
+					MenuItemPrice = jsonObject.getString(MENUITEMPRICE);
+					TagName = jsonObject.getString(TAGNAME);
+
+					dao.addToMenu(new MenuInfoModel(CategoryName,avg_rating,MenuItemDesc,MenuItemImageURL,"0",MenuItemIsChefRecommend,MenuItemName,MenuItemPrice,TagName));
+
+				}
+
+
+
+			}
+
+			//////////////////////////////////////////////Category json\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 			JSONArray menuInfo = info.getJSONArray(MENUINFO);
 			
 			for(int i =0; i<menuInfo.length();i++){
@@ -369,6 +498,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 			map3.put(FRONTENDMENUNAME, "SignUp");
 
 			list1.add(map3);
+
 			JSONArray imageInfo = info.getJSONArray(IMAGEINFO);
 
 			for(int index = 0;index<imageInfo.length();index++){
@@ -377,7 +507,8 @@ public class ResturantEntryActivity extends MainActivityqr{
 
 				RestaurantImageID = object1.getString(RESTAURANTIMAGEID);
 				RestaurantImageUrl = object1.getString(RESTAURANTIMAGEURL);
-				DownloadFromUrl(+index+".jpg",JsonFunctions.BASE_URL +RestaurantImageUrl );
+				dao.addToSlider(new SliderImageModel(RestaurantImageUrl));
+				DownloadFromUrl("/MenuApp/Resturant/",index+".jpg",JsonFunctions.BASE_URL +RestaurantImageUrl );
 				Map<String,String> map2 = new HashMap<>();
 				map2.put("RestaurantImageID", RestaurantImageID);
 				Log.d("resimage id", RestaurantImageID);
@@ -446,13 +577,17 @@ public class ResturantEntryActivity extends MainActivityqr{
 			try{
 
 			if(type.equals("success")){
+
+				addResturant(resturantCode);
+
 				
 			/*	entryModel.setList(null);
 				entryModel.setList(list1);
 				entryModel.setList1(list);*/
 				
 				//*Log.d("val", json);
-				Toast.makeText(ResturantEntryActivity.this,"Success", Toast.LENGTH_LONG).show();
+
+				//Toast.makeText(ResturantEntryActivity.this,"Success", Toast.LENGTH_LONG).show();
 				Intent intent = new Intent(ResturantEntryActivity.this,ResturantInfo.class);
 				intent.putExtra(RESTAURANTID, resturantId);
 				intent.putExtra(RESTAURANTLOGIMAGE, restaurantLogImage);
@@ -471,9 +606,9 @@ public class ResturantEntryActivity extends MainActivityqr{
 				intent.putExtra(LNG, lng);
 				
 				startActivity(intent);
-			
+				//finish();
 				//list1.clear();
-				Toast.makeText(ResturantEntryActivity.this,"Success", Toast.LENGTH_LONG).show();
+				//Toast.makeText(ResturantEntryActivity.this,"Success", Toast.LENGTH_LONG).show();
 			}else{
 				
 				Toast.makeText(ResturantEntryActivity.this,"Wrong resturant code", Toast.LENGTH_LONG).show();
@@ -554,10 +689,20 @@ public class ResturantEntryActivity extends MainActivityqr{
 		}
 	}
 
-	static public void DownloadFromUrl(String fileName,String urlVal) {
+	public void addResturant(String resturantCode){
+
+
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString("resturant_code",resturantCode);
+		//editor.putString("password", password);
+
+		editor.commit();
+
+	}
+	static public void DownloadFromUrl(String pathVal,String fileName,String urlVal) {
 		try {
 
-			File path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/MenuApp/Resturant");
+			File path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+pathVal);
 			path.mkdirs();
 			URL url = new URL(urlVal); //you can write here any link
 			File file = new File(path,fileName);
@@ -565,7 +710,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 			long startTime = System.currentTimeMillis();
 			//tv.setText("Starting download......from " + url);
 
-			Log.d("Start downladed from ",urlVal+"file name ----->   "+path+"/MenuApp/"+fileName);
+			Log.d("Start downladed from ",urlVal+"file name ----->   "+path+fileName);
 			URLConnection ucon = url.openConnection();
 			InputStream is = ucon.getInputStream();
 			BufferedInputStream bis = new BufferedInputStream(is);
@@ -587,4 +732,34 @@ public class ResturantEntryActivity extends MainActivityqr{
 		}
 	}
 
+	public List<String> getFromSdcard(String path)
+	{
+		ArrayList<String> f = new ArrayList<String>();
+		File[] listFile;
+		File file= new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+path);
+
+		if (file.isDirectory())
+		{
+			listFile = file.listFiles();
+
+
+			for (int i = 0; i < listFile.length; i++)
+			{
+
+				f.add(listFile[i].getAbsolutePath());
+
+				Log.d("val",listFile[i].getAbsolutePath());
+
+			}
+		}
+
+		return  f;
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		dao.close();
+	}
 }

@@ -5,31 +5,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,7 +60,13 @@ public class MyMainCategory extends ActionBarActivity {
     String resturantId="1";
     DrawerLayout drawerLayout;
     ArrayList<Map<String, String>> arrayList = new ArrayList<>();
+
+    List<Map<String,String>> menuDetailsList = Collections.emptyList();
+
+    List<CategoryModel> categoryModelArrayList = Collections.emptyList();
     RelativeLayout rel_layout;
+    PlaceOrderSqlHelperDao dao;
+
 
     String user_email,user_password;
 
@@ -74,7 +74,7 @@ public class MyMainCategory extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_main);
-
+        dao = new PlaceOrderSqlHelperDao(this);
         toolbar = (Toolbar) findViewById(R.id.tool);
         listView = (ListView) findViewById(R.id.list);
         bar = (ProgressBar) findViewById(R.id.progressBar1);
@@ -83,20 +83,88 @@ public class MyMainCategory extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         rel_layout = (RelativeLayout)findViewById(R.id.list_val);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+        //for demo only.
+     /* try {
+          Thread.sleep(2000);
+          getAllDataFromUrl();
+
+
+      }catch (Exception e){
+
+          e.printStackTrace();;
+      }*/
+
+
+        /*try {
+
+            new Thread(new Runnable() {
+                public void run() {
+                    //ResturantEntryActivity.DownloadFromUrl("/MenuApp/MenuCategory/", index + ".jpg", JsonFunctions.BASE_URL + categoryModelArrayList.get(index).getCategoryImageURL());
+                    getAllDataFromUrl();
+
+                }
+            }).start();
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }*/
+
         new CategoryItems().execute();
+        menuDetailsList = new ArrayList<>();
         sharedPreferences = getSharedPreferences(MYPREF,Context.MODE_PRIVATE);
 
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.nav_drawer_id);
 
+
+
         drawerFragment.setUi(drawerLayout, toolbar);
+
+
+
+        categoryModelArrayList = dao.getCategory();
+
+
+       /* for (int index = 0; index < categoryModelArrayList.size(); index++) {
+
+            Log.d("category_name", categoryModelArrayList.get(index).getCategoryName());
+            Log.d("category_name", categoryModelArrayList.get(index).getCategoryImageURL());
+
+            Map<String, String> map = new HashMap<>();
+
+            map.put(CATEGORYID, String.valueOf(index));
+
+            map.put(CATEGORYIMAGEURL, categoryModelArrayList.get(index).getCategoryImageURL());
+
+                      *//*  for(int index = 0;index<arrayList.size();index++){
+*//*
+
+            ResturantEntryActivity.DownloadFromUrl("/MenuApp/MenuCategory/",index+".jpg",JsonFunctions.BASE_URL +categoryModelArrayList.get(index).getCategoryImageURL() );
+
+
+                     *//*   }*//*
+
+            map.put(CATEGORYNAME, categoryModelArrayList.get(index).getCategoryName());
+
+            arrayList.add(map);*/
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent  intent = new Intent(MyMainCategory.this,MainActivity.class);
+
+                Intent intent = new Intent(MyMainCategory.this, MainActivity.class);
+
+                // intent.putExtra("category_name",arrayList.get(position).get(CATEGORYNAME));
+
+                putCategory(arrayList.get(position).get(CATEGORYNAME));
                 startActivity(intent);
             }
         });
+
+
 
 
     }
@@ -137,6 +205,7 @@ public class MyMainCategory extends ActionBarActivity {
                 sharedPreferences.edit().clear().commit();
                 item.setIcon(R.drawable.login148);
             }
+
           /*  }else{
                 {
                     item.setIcon(R.drawable.login148);
@@ -158,12 +227,52 @@ public class MyMainCategory extends ActionBarActivity {
     }
     class CategoryItems extends AsyncTask<Void, Void, Void> {
 
+
+        public void  getAllData(){
+
+
+            try {
+                categoryModelArrayList = dao.getCategory();
+
+
+                for (int index = 0; index < categoryModelArrayList.size(); index++) {
+
+                    Log.d("category_name", categoryModelArrayList.get(index).getCategoryName());
+                    Log.d("category_name", categoryModelArrayList.get(index).getCategoryImageURL());
+
+                    Map<String, String> map = new HashMap<>();
+
+                    map.put(CATEGORYID, String.valueOf(index));
+
+                    map.put(CATEGORYIMAGEURL, categoryModelArrayList.get(index).getCategoryImageURL());
+
+                      /*  for(int index = 0;index<arrayList.size();index++){
+*/
+
+                        if(categoryModelArrayList.size() != getFromSdcard("/MenuApp/MenuCategory/").size() ) {
+                            ResturantEntryActivity.DownloadFromUrl("/MenuApp/MenuCategory/", index + ".jpg", JsonFunctions.BASE_URL + categoryModelArrayList.get(index).getCategoryImageURL());
+
+                        }
+
+
+                     /*   }*/
+
+                    map.put(CATEGORYNAME, categoryModelArrayList.get(index).getCategoryName());
+
+                    arrayList.add(map);
+
+                }
+            }catch (Exception e){
+
+                e.printStackTrace();
+            }
+        }
         @Override
         protected Void doInBackground(Void... params) {
 
             try {
 
-                ServiceHandler handler = new ServiceHandler();
+               /* ServiceHandler handler = new ServiceHandler();
 
                 JsonFunctions functions = new JsonFunctions(handler);
 
@@ -202,7 +311,10 @@ public class MyMainCategory extends ActionBarActivity {
                         arrayList.add(map);
 
                     }
-                }
+                }*/
+
+                getAllData();
+
             } catch (Exception e) {
 
                 e.printStackTrace();
@@ -224,9 +336,9 @@ public class MyMainCategory extends ActionBarActivity {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
             //
-            try {
-                if (type.equals("success")) {
-
+         /*   try {*/
+               /* if (type.equals("success")) {
+*/
                     try {
                         bar.setVisibility(View.GONE);
                         ArrayAdapter adapter = new CategoryAdapter(MyMainCategory.this, R.layout.category_item, arrayList);
@@ -239,12 +351,12 @@ public class MyMainCategory extends ActionBarActivity {
 
                         e.printStackTrace();
                     }
-                }
 
-            } catch (Exception e) {
+
+          /*  } catch (Exception e) {
                 Toast.makeText(MyMainCategory.this,"Please check internet",Toast.LENGTH_LONG).show();
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 
@@ -257,7 +369,15 @@ public class MyMainCategory extends ActionBarActivity {
         editor.commit();
 
     }
+    public void putCategory(String categoryName){
 
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("category_name",categoryName);
+
+
+        editor.commit();
+
+    }
 
    /* private void initiatePopupWindow() {
         try {
@@ -312,4 +432,73 @@ public class MyMainCategory extends ActionBarActivity {
             e.printStackTrace();
         }
     }*/
+
+    public  void  getAllDataFromUrl(){
+
+
+        try {
+            categoryModelArrayList = dao.getCategory();
+
+
+            for (int index = 0; index < categoryModelArrayList.size(); index++) {
+
+                Log.d("category_name", categoryModelArrayList.get(index).getCategoryName());
+                Log.d("category_name", categoryModelArrayList.get(index).getCategoryImageURL());
+
+                Map<String, String> map = new HashMap<>();
+
+                map.put(CATEGORYID, String.valueOf(index));
+
+                map.put(CATEGORYIMAGEURL, categoryModelArrayList.get(index).getCategoryImageURL());
+
+                      /*  for(int index = 0;index<arrayList.size();index++){
+*/
+
+                ResturantEntryActivity.DownloadFromUrl("/MenuApp/MenuCategory/",index+".jpg",JsonFunctions.BASE_URL +categoryModelArrayList.get(index).getCategoryImageURL() );
+
+
+                     /*   }*/
+
+                map.put(CATEGORYNAME, categoryModelArrayList.get(index).getCategoryName());
+
+                arrayList.add(map);
+
+            }
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+        //System.exit(0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dao.close();
+    }
+
+    public List<String> getFromSdcard(String path)
+    {
+        ArrayList<String> f = new ArrayList<String>();
+        File[] listFile;
+        File file= new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+path);
+
+        if (file.isDirectory())
+        {
+            listFile = file.listFiles();
+
+
+            for (int i = 0; i < listFile.length; i++)
+            {
+
+                f.add(listFile[i].getAbsolutePath());
+
+                Log.d("val",listFile[i].getAbsolutePath());
+
+            }
+        }
+
+        return  f;
+    }
 }

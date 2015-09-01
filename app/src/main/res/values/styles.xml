@@ -14,7 +14,7 @@
 
     </style>
 
-    <style name="MyCustomStyle" parent="ThemeOverlay.AppCompat.Light">
+    <style name="MyCustomStyle" parent="ThemeOverlay.AppCompat.Dark">
 
         <item name="android:textColorPrimary">@color/textPrimary</item>
         <item name="android:textColor">@color/textPrimary</item>

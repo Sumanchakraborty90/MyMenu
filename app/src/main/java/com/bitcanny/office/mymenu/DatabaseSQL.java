@@ -1,7 +1,5 @@
 package com.bitcanny.office.mymenu;
 
-import java.util.Stack;
-
 /**
  * Created by OFFICE on 24-06-2015.
  */
@@ -291,7 +289,7 @@ public class DatabaseSQL {
 
     public String getAllOrder(){
 
-        String returnVal = "Select * from "+ PLACEORDER;
+        String returnVal = "Select * from "+ PLACEORDER +" where order_item_quantity <> 0";
 
         return returnVal;
 

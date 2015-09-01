@@ -11,7 +11,7 @@
         android:id="@+id/grid"
         android:layout_width="match_parent"
 
-        android:background="@drawable/white_bg"
+        android:background="#e8e8e8"
         android:layout_height="match_parent">
 
         <ProgressBar
@@ -23,17 +23,107 @@
             android:layout_centerHorizontal="true"
             android:visibility="gone"
             />
-        <GridView
+        <ListView
             android:id="@+id/grid_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
 
+            android:paddingBottom="40dp"
             android:numColumns="auto_fit"
             android:gravity="center"
             android:stretchMode="columnWidth"
             >
-        </GridView>
+        </ListView>
+
+        <RelativeLayout
+            android:id="@+id/add_to_cart"
+            android:layout_width="match_parent"
+
+            android:text="value"
+            android:layout_alignParentBottom="true"
+
+            android:background="@drawable/increment_decrement_focus"
+            android:layout_height="40dp" >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentTop="true"
+                android:background="#00c7ad"></View>
+            <RelativeLayout
+                android:id="@+id/rel_crt_img"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="3dp"
+
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_crt"
+                    android:layout_width="25dp"
+                    android:background="@drawable/cart"
+                    android:layout_centerVertical="true"
+                    android:layout_height="25dp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                  android:layout_alignParentTop="true"
+
+                   android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="17dp"
+
+
+
+                        android:background="@drawable/round"
+                        android:layout_height="17dp" />
+                    <TextView
+                        android:id="@+id/txt_item_select"
+                        android:layout_width="20dp"
+                        android:textSize="7dp"
+                        android:textColor="#fff"
+                        android:layout_marginTop="7dp"
+                       android:layout_centerInParent="true"
+
+
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="8dp"
+                        android:text="0"
+                        android:layout_height="20dp" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="2dp"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@+id/rel_crt_img"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="#bbbbbb" />
+
+            <TextView
+                android:id="@+id/txt_price_val"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/view1"
+
+                android:textColor="#000"
+                android:paddingLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/img_add_to_cart_arrow"
+                android:layout_width="25dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/img"
+
+
+                android:layout_centerVertical="true"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
 
        <!-- <ProgressBar
             android:layout_width="wrap_content"

@@ -1,24 +1,24 @@
 package com.bitcanny.office.mymenu;
 
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,8 +43,12 @@ public class NavigationDrawerFragment extends Fragment {
     String RestaurantRatingID,RestaurantRatingRate,RestaurantRatingReview,returnValue;*/
 
 
+    private static String MYPREF = "mypref";
+    private static String EMAIL = "email";
+    private static  String PASSWORD = "password";
+    SharedPreferences sharedPreferences;
     PlaceOrderSqlHelperDao dao;
-
+    List<FrontEndMenuModel> list=Collections.emptyList();
 
     MyNavigationAdapter adapter;
     private DrawerLayout drawerLayout1;
@@ -67,6 +71,9 @@ public class NavigationDrawerFragment extends Fragment {
         dao = new PlaceOrderSqlHelperDao(getActivity());
         listView.setVerticalScrollBarEnabled(false);
         listView.setHorizontalScrollBarEnabled(false);
+
+        sharedPreferences = getActivity().getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
+
      /*  recyclerView = (RecyclerView) root.findViewById(R.id.my_recycler_view);
 
         adapter = new MyNavigationAdapter(getActivity(),maps);
@@ -76,7 +83,10 @@ public class NavigationDrawerFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));*/
 
         //getMaps();
-        ArrayAdapter adapter = new NavigationDrawerAdapter(getActivity(),0,ResturantEntryActivity.list1);
+
+
+
+        ArrayAdapter adapter = new NavigationDrawerAdapter(getActivity(),0,dao.getAllMenu());
 
         listView.setAdapter(adapter);
 
@@ -92,64 +102,91 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            if(position == 0){
-               // drawerLayout1.openDrawer(Gravity.LEFT);
-                Intent intent = new Intent(getActivity(),MyMainCategory.class);
+                if (position == 0) {
+                    // drawerLayout1.openDrawer(Gravity.LEFT);
+                    Intent intent = new Intent(getActivity(), MyMainCategory.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+
+
+                } else if (position == 2) {
+
+             /*   Intent intent = new Intent(getActivity(),ChefsRecomendation.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+*/
+
+                    Intent intent = new Intent(getActivity(), CartOrderActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                } else if (position == 3) {
+
+                    ResturantEntryActivity.list1.clear();
+                    dao.dropFrntEndMenu();
+                    dao.createTableFrontEndMenu();
+                    Intent intent = new Intent(getActivity(), ResturantEntryActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                    SharedPreferences settings = getActivity().getSharedPreferences("mypref", Context.MODE_PRIVATE);
+                    settings.edit().clear().commit();
+                    getActivity().deleteDatabase("MenuDb");
+                    try {
+                        File fdelete = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/MenuApp");
+                        if (fdelete.exists()) {
+                            if (fdelete.delete()) {
+                                System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/MenuApp");
+                            } else {
+                                System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/MenuApp");
+                            }
+                        }
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+                    }
+                    // getActivity().deleteFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/MenuApp");
+                } else if (position == 7) {
+
+                    // dao.dropTable(RESTAURANTNAME);
+
+
+                } else if (position == 4) {
+
+              /*  Intent intent = new Intent(getActivity(),OrderToCartActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);*/
+
+                    Intent intent = new Intent(getActivity(), ResturantEntryActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+
+                } else if (position == 5) {
+
+                    Intent intent = new Intent(getActivity(), RegistrationActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+
+                } else if (position == 6) {
+
+                   if (sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals("")) {
+
+                        Intent intent = new Intent(getActivity(), LogInActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
+                    } else {
+
+                       putSharedPreference("","");
+                    }
+
+
+                }/*else if(position == 8){
 
 
 
-            }else if(position == 2){
 
-                Intent intent = new Intent(getActivity(),MyFavourites.class);
-                startActivity(intent);
-
-            }else if(position == 3){
-
-                Intent intent = new Intent(getActivity(),ChefsRecomendation.class);
-                startActivity(intent);
-
-            }else if(position == 4){
-
-                Intent intent = new Intent(getActivity(), CartOrderActivity.class);
-                startActivity(intent);
-            }else if(position == 5){
-
-                Intent intent = new Intent(getActivity(),OrderToCartActivity.class);
-                startActivity(intent);
-            }else if(position == 6){
-
-                ResturantEntryActivity.list1.clear();
-                dao.dropFrntEndMenu();
-                dao.createTableFrontEndMenu();
-                Intent intent = new Intent(getActivity(),ResturantEntryActivity.class);
-                startActivity(intent);
-                getActivity().finish();
-
-            }else if(position == 7){
-
-               // dao.dropTable(RESTAURANTNAME);
-                Intent intent = new Intent(getActivity(),ResturantEntryActivity.class);
-                startActivity(intent);
-             getActivity().finish();
-
-
-
-
-            }else if(position == 8){
-
-                Intent intent = new Intent(getActivity(),LogInActivity.class);
-                startActivity(intent);
-
-
-            }else if(position == 9){
-
-                Intent intent = new Intent(getActivity(),RegistrationActivity.class);
-                startActivity(intent);
 
             }
-
-
+*/
 
             }
         });
@@ -210,4 +247,13 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
 
+    public void putSharedPreference(String email,String password){
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email",email);
+        editor.putString("password",password);
+
+        editor.commit();
+
+    }
 }

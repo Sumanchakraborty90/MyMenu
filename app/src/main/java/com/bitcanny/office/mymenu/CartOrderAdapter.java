@@ -1,19 +1,24 @@
 package com.bitcanny.office.mymenu;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by OFFICE on 22-07-2015.
@@ -21,22 +26,48 @@ import java.util.Map;
 public class CartOrderAdapter extends ArrayAdapter {
 
     Context context;
-    List<Map<String,String>> maps;
+   // List<Map<String,String>> maps;
+    List<OrderToCartAdapterModel> maps;
+    Typeface typeface;
+    TextView txt_amount_payable,sub_total;
+    static int totalAmt=0;
+    static  Double totalAmountMoney=0.0;
+    static int pos = 0;
+    boolean check = false;
+    int flag = 0;
+    PlaceOrderSqlHelperDao dao;
+    private static String MYPREF = "mypref";
+    private static String EMAIL = "email";
+    private static  String PASSWORD = "password";
+    SharedPreferences sharedPreferences;
 
-    public CartOrderAdapter(Context context, int resource, List<Map<String, String>> maps) {
+
+    public CartOrderAdapter(Context context, int resource, List<OrderToCartAdapterModel> maps,TextView sub_total,TextView txt_amount_payable) {
         super(context, resource, maps);
         this.maps = maps;
         this.context = context;
+        this.sub_total = sub_total;
+        this.txt_amount_payable = txt_amount_payable;
+        dao = new PlaceOrderSqlHelperDao(context);
+        sharedPreferences = context.getSharedPreferences(MYPREF,Context.MODE_PRIVATE);
+        //HorizontalNumberPicker1.
+
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         convertView = layoutInflater.inflate(R.layout.order_to_cart,parent,false);
 
 
+        pos = position;
+
+        ImageView plus = (ImageView) convertView.findViewById(R.id.btn_plus);
+        ImageView minus = (ImageView) convertView.findViewById(R.id.btn_minus);
+        final TextView edit_text = (TextView)convertView.findViewById(R.id.edit_text);
+/*
         ImageView img_icon = (ImageView) convertView.findViewById(R.id.img_icon);
 
         TextView txt_item_name = (TextView) convertView.findViewById(R.id.txt_item_name);
@@ -58,6 +89,225 @@ public class CartOrderAdapter extends ArrayAdapter {
         txt_item_name.setText(maps.get(position).get("order_name"));
         txt_price.setText("Rs. "+maps.get(position).get("order_item_price"));
 
+
+*/
+
+        totalAmountMoney = Double.valueOf(maps.get(position).getOrder_item_price());
+     //   Log.d("numberOfitems selected",maps.get(position).get("selectedItems"));
+
+
+        if(check == false && flag<=maps.size()-1 ) {
+            int a=dao.updateSelectedItems(maps.get(position).getOrder_name(),maps.get(position).getOrder_item_quantity());
+            putSharedPreference(String.valueOf(GridViewAdapter.amount), String.valueOf(GridViewAdapter.mnyAmt));
+            Log.d("updated", position + "updated" + a);
+            flag++;
+
+        }else{
+            check = true;
+        }
+
+        //edit_text.setText(String.valueOf(totalAmt));
+        Log.d("actual selected items", maps.get(position).getOrder_item_quantity());
+
+
+        edit_text.setText(String.valueOf(dao.getUpdatedSelectedItems(maps.get(position).getOrder_name())));
+        //edit_text.setText(maps.get(position).getOrder_item_quantity());
+
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Log.d("clicked","plus");
+
+                int value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name())+1;
+
+                Log.d("value",value+"");
+                GridViewAdapter.mnyAmt = GridViewAdapter.mnyAmt + Double.valueOf(maps.get(position).getOrder_item_price());
+                txt_amount_payable.setText(String.valueOf(GridViewAdapter.mnyAmt));
+                GridViewAdapter.amount++;
+
+                putSharedPreference(String.valueOf(GridViewAdapter.amount),String.valueOf(GridViewAdapter.mnyAmt));
+                sub_total.setText(String.valueOf(GridViewAdapter.mnyAmt));
+                dao.updateSelectedItems(maps.get(position).getOrder_name(), String.valueOf(value));
+                dao.updateSelectedItemsInMenu(maps.get(position).getOrder_name(), String.valueOf(value));
+                 value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name());
+                    edit_text.setText(String.valueOf(value));
+                    // totalAmt = value;
+                }
+            });
+
+     /*   plus.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                int val = totalAmt + 1;
+                edit_text.setText(val);
+                return false;
+            }
+        });
+
+        minus.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                int val = totalAmt - 1;
+                edit_text.setText(val);
+                return false;
+            }
+        });*/
+            minus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("clicked","minus");
+
+                    if(dao.getUpdatedSelectedItems(maps.get(position).getOrder_name())>0) {
+                        int value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name()) - 1;
+
+                        Log.d("value", value + "");
+                        if( GridViewAdapter.amount>0) {
+                            GridViewAdapter.amount--;
+
+                        }
+                        if(GridViewAdapter.mnyAmt>0) {
+                            GridViewAdapter.mnyAmt = GridViewAdapter.mnyAmt - Double.valueOf(maps.get(position).getOrder_item_price());
+                        }
+
+                        putSharedPreference(String.valueOf(GridViewAdapter.amount),String.valueOf(GridViewAdapter.mnyAmt));
+                            txt_amount_payable.setText(String.valueOf(GridViewAdapter.mnyAmt));
+                        sub_total.setText(String.valueOf(GridViewAdapter.mnyAmt));
+                        dao.updateSelectedItems(maps.get(position).getOrder_name(), String.valueOf(value));
+                        dao.updateSelectedItemsInMenu(maps.get(position).getOrder_name(), String.valueOf(value));
+                        value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name());
+                    edit_text.setText(String.valueOf(value));
+
+                }
+            }
+        });
+
+       /// HorizontalBean bean = new HorizontalBean(Integer.valueOf(maps.get(position).getOrder_item_quantity()));
+
+       // HorizontalNumberPicker1.amount1 = Integer.valueOf(maps.get(position).get("selectedItems"));
+       // HorizontalNumberPicker1 picker1 = new HorizontalNumberPicker1(context,null,Integer.valueOf(maps.get(position).get("selectedItems")));
+
+       // HorizontalBean bean = new HorizontalBean(totalAmt);
+        HorizontalNumberPicker1 numberPicker1 = (HorizontalNumberPicker1)convertView.findViewById(R.id.horizontal_number_picker);
+
+
+        HorizontalNumberPicker1.amount1 = totalAmt;
+     /*   TextView edit_text = (TextView)numberPicker1.findViewById(R.id.edit_text);
+
+        edit_text.setText(String.valueOf(maps.get(position).getOrder_item_quantity()));*/
+
+        ImageView grid_img = (ImageView)convertView.findViewById(R.id.grid_img);
+
+
+
+        TextView txt_food_name = (TextView)convertView.findViewById(R.id.txt_food_name);
+
+        TextView food_price = (TextView) convertView.findViewById(R.id.food_price);
+
+        txt_food_name.setTypeface(typeface);
+
+        food_price.setTypeface(typeface);
+
+
+
+        txt_food_name.setText(String.valueOf(maps.get(position).getOrder_name()));
+
+
+
+        food_price.setText(String.valueOf(maps.get(position).getOrder_item_price()));
+
+        Log.d("image_url",maps.get(position).getOrder_item_image_url());
+
+
+        ImageView img_view1 = (ImageView)convertView.findViewById(R.id.img_view1);
+
+        ImageView img_view2 = (ImageView)convertView.findViewById(R.id.img_view2);
+
+        ImageView img_view3 = (ImageView)convertView.findViewById(R.id.img_view3);
+
+        ImageView img_view4 = (ImageView)convertView.findViewById(R.id.img_view4);
+
+        ImageView img_view5 = (ImageView)convertView.findViewById(R.id.img_view5);
+
+        ImageView img_view6 = (ImageView)convertView.findViewById(R.id.img_view6);
+
+        /*View vv = parent.getRootView();
+        final TextView texto = (TextView) vv.findViewById(R.id.txt_item_select);*/
+
+
+
+
+        ImageView img_share = (ImageView)convertView.findViewById(R.id.img_share);
+        RelativeLayout rel_amount = (RelativeLayout)convertView.findViewById(R.id.rel_amount);
+
+       // final HorizontalNumberPicker1 numberPicker = (HorizontalNumberPicker1) convertView.findViewById(R.id.horizontal_number_picker);
+
+
+
+
+        ImageView img_plus = (ImageView)numberPicker1.findViewById(R.id.btn_plus);
+
+
+
+        ImageView img_minus = (ImageView) numberPicker1.findViewById(R.id.btn_minus);
+
+
+        img_plus.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+
+               // MainActivity.numberOfItemsSelected = String.valueOf(HorizontalNumberPicker.finalAmount + 1);
+                sub_total.setText(String.valueOf(HorizontalNumberPicker1.amountMoney+totalAmountMoney));
+                //MainActivity.totalAmtValue = String.valueOf(HorizontalNumberPicker.amountMoney+totalAmountMoney);
+
+                return false;
+            }
+        });
+        img_minus.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                //MainActivity.numberOfItemsSelected = String.valueOf(HorizontalNumberPicker.finalAmount + 1);
+                sub_total.setText(String.valueOf(HorizontalNumberPicker1.amountMoney-totalAmountMoney));
+               // HorizontalNumberPicker1.amountMoney = String.valueOf(HorizontalNumberPicker.amountMoney-totalAmountMoney);
+                return false;
+            }
+        });
+
+
+        try {
+
+            for(int index = 0;index<getFromSdcard("/MenuApp/MenuItemGrid/").size();index++){
+
+                // Log.d("all images......",getFromSdcard("/MenuApp/MenuItemGrid/").get(position));
+                boolean value = Utility.getItemImageName(getFromSdcard("/MenuApp/MenuItemGrid/").get(index)).equals(maps.get(position).getOrder_name());
+                if(value == true) {
+//                    Log.d("bitcannyImageOrderPage",maps.get(index).getOrder_item_image_url());
+                    // indexFlag= index;
+                    Picasso.with(context)
+                           // .load(new File(maps.get(index).getOrder_item_image_url()))
+                            .load(new File(getFromSdcard("/MenuApp/MenuItemGrid/").get(index)))
+                            .placeholder(R.mipmap.ic_launcher) // optional
+                            .error(R.mipmap.ic_launcher)
+                            .transform(new RoundedCorner(4, 0))// optional
+                            .into(grid_img);
+                }
+            }
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
+        img_view1.setImageResource(R.drawable.veg);
+        img_view2.setImageResource(R.drawable.non_veg);
+        img_view3.setImageResource(R.drawable.fish);
+        img_view4.setImageResource(R.drawable.high_chilli);
+        img_view5.setImageResource(R.drawable.chef_reco);
+        img_view6.setImageResource(R.drawable.high_rated);
+
         return convertView;
     }
 
@@ -72,8 +322,69 @@ public class CartOrderAdapter extends ArrayAdapter {
         return list;
     }
 
+    public List<String> getFromSdcard(String path)
+    {
+        ArrayList<String> f = new ArrayList<String>();
+        File[] listFile;
+        File file= new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+path);
+
+        if (file.isDirectory())
+        {
+            listFile = file.listFiles();
 
 
+            for (int i = 0; i < listFile.length; i++)
+            {
 
+                f.add(listFile[i].getAbsolutePath());
+
+                Log.d("val",listFile[i].getAbsolutePath());
+
+            }
+        }
+
+        return  f;
+    }
+
+  /*  public List<String> getFromSdcard(String path)
+    {
+        ArrayList<String> f = new ArrayList<String>();
+        File[] listFile;
+        File file= new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+path);
+
+        if (file.isDirectory())
+        {
+            listFile = file.listFiles();
+
+
+            for (int i = 0; i < listFile.length; i++)
+            {
+
+                f.add(listFile[i].getAbsolutePath());
+
+                Log.d("val", listFile[i].getAbsolutePath());
+
+            }
+        }
+
+        return  f;
+    }*/
+
+
+    public static int getSelection(){
+
+       return totalAmt;
+    }
+
+
+    public void putSharedPreference(String selectedItems,String totalAmt){
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("selectedItems",selectedItems);
+        editor.putString("totalAmt", totalAmt);
+
+        editor.commit();
+
+    }
 
 }

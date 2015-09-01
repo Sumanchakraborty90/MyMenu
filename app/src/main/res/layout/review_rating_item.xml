@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="wrap_content"
+                android:layout_alignParentTop="true"
+                android:textColor="#000"
+                android:textSize="20dp"
+                android:padding="5dp"
+                android:text="value"
+                android:layout_height="wrap_content" />
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+
+                android:layout_below="@+id/txt_name"
+                android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txt_decription"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@+id/rating_bar"
+                    android:text="value"
+                    android:textSize="15dp"
+                    android:padding="5dp"
+                    android:textColor="#000"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

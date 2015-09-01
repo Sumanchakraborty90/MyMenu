@@ -1,6 +1,7 @@
 package com.bitcanny.office.mymenu;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class ResturantInfoReviewRatingAdapter extends ArrayAdapter {
 
     Context context;
     List<Map<String,String>> maps;
+    Typeface typeface;
 
 
     public ResturantInfoReviewRatingAdapter(Context context, int resource, List<Map<String,String>> maps) {
@@ -26,7 +28,7 @@ public class ResturantInfoReviewRatingAdapter extends ArrayAdapter {
 
         this.context = context;
         this.maps = maps;
-
+        typeface = Typeface.createFromAsset(context.getAssets(),"fonts/ufonts.com_century-gothic.ttf");
     }
 
     @Override
@@ -42,8 +44,11 @@ public class ResturantInfoReviewRatingAdapter extends ArrayAdapter {
 
         RatingBar rt_bar = (RatingBar)convertView.findViewById(R.id.rt_bar);
 
-       // txt_name.setText(maps.get(position).get("RestaurantRatingRate"));
-        txt_name.setVisibility(View.GONE);
+
+        txt_name.setTypeface(typeface);
+        txt_review.setTypeface(typeface);
+        txt_name.setText(maps.get(position).get("RestaurantRatingAddby"));
+        //txt_name.setVisibility(View.GONE);
         txt_review.setText(maps.get(position).get("RestaurantRatingReview"));
         rt_bar.setRating((Float.valueOf(maps.get(position).get("RestaurantRatingRate"))));
 

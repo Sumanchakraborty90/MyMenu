@@ -23,4 +23,25 @@
         <string name="title_activity_cart_order">CartOrderActivity</string>
         <string name="title_activity_registration">Registration</string>
     <string name="title_activity_login">LogIn</string>
+        <string name="title_activity_review_rating">ReviewRatingActivity</string>
+        <string name="title_activity_my_previous_resturants">MyPreviousResturants</string>
+        <string name="title_activity_resturant_review_rating">ResturantReviewRating</string>
+        <string name="title_activity_payment_option">PaymentOption</string>
+
+    <string name="facebook_app_id">1629127177371914</string>
+
+
+    <string-array name="payment_items">
+        <item >Crtedit/DebitCard</item>
+        <item >Net Banking</item>
+
+    </string-array>
+
+
+    <array name="payment_icons">
+        <item>@drawable/chef_reco</item>
+        <item>@drawable/chef_reco</item>
+
+    </array>
+        <string name="title_activity_face_book">FaceBookActivity</string>
 </resources>

@@ -1,8 +1,8 @@
 package com.bitcanny.office.mymenu;
 
-import android.support.v7.app.ActionBarActivity;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -13,33 +13,40 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class ResturantMap extends ActionBarActivity {
     String lat="",lng="";
     GoogleMap map;
+    String title,desc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resturant_map);
-
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        }
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         Bundle bundle = getIntent().getExtras();
         try {
             lat = bundle.getString("lat");
             lng = bundle.getString("lng");
+            title= bundle.getString("title");
+            desc = bundle.getString("desc");
 
+            myMap(Double.valueOf(lat), Double.valueOf(lng));
         }catch (Exception e){
 
             e.printStackTrace();
         }
-        try {
+      /*  try {
             initilizeMap(lat,lng);
         }catch (Exception e){
 
             e.printStackTrace();
-        }
+        }*/
 
 
     }
@@ -48,7 +55,12 @@ public class ResturantMap extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initilizeMap(lat,lng);
+        try {
+            myMap(Double.valueOf(lat), Double.valueOf(lng));
+        }catch(Exception e){
+
+            e.printStackTrace();
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -152,5 +164,39 @@ public class ResturantMap extends ActionBarActivity {
             e.printStackTrace();
         }
         return true;
+    }
+
+   public void myMap(double lat,double lng){
+
+
+       LatLng HAMBURG = new LatLng(lat, lng);
+       map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
+               .getMap();
+       map.setMyLocationEnabled(true);
+       Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG)
+               .title(title)
+       .snippet(desc));
+       hamburg.setVisible(true);
+
+      /* Marker kiel = map.addMarker(new MarkerOptions()
+               .position(KIEL)
+               .title("Kiel")
+               .snippet("Kiel is cool")
+               .icon(BitmapDescriptorFactory
+                       .fromResource(R.drawable.)));
+*/
+       // Move the camera instantly to hamburg with a zoom of 15.
+       map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 30));
+
+       // Zoom in, animating the camera.
+       map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+
     }
 }

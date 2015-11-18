@@ -1,6 +1,6 @@
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rel_val"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,15 +21,21 @@
             android:layout_height="wrap_content">
 
             <android.support.v7.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/tools"
+                card_view:cardElevation="2dp"
+                android:layout_marginBottom="4dp"
                 android:id="@+id/card_view"
                 android:layout_width="match_parent"
-                android:background="@drawable/increment_decrement_focus"
+                app:cardElevation="5dp"
+                android:paddingBottom="20dp"
                 android:layout_height="wrap_content">
 
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:paddingBottom="20dp"
+
                 android:layout_height="wrap_content">
 
             <RelativeLayout
@@ -42,7 +48,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/car"/>
--->        <include layout="@layout/activity_main11" android:id="@+id/slide_img"></include>
+-->        <include layout="@layout/activity_main11"
+                style="@style/AppTheme.Toolbar.Title"
+                android:id="@+id/slide_img"></include>
               <!--  <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -60,16 +68,18 @@
                 android:id="@+id/rel2"
                 android:layout_width="match_parent"
                 android:layout_below="@+id/rel1"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="15dp"
 
-                android:layout_marginRight="15dp"
+
+
                 android:layout_height="wrap_content">
 
                     <RelativeLayout
                         android:id="@+id/rel3"
                         android:layout_width="match_parent"
-
+                        android:paddingTop="18dp"
+                        android:paddingBottom="18dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
                         android:background="@drawable/increment_decrement_focus"
                         android:layout_height="wrap_content">
                     <TextView
@@ -86,25 +96,44 @@
 
                     <ImageView
                         android:id="@+id/img_arrow"
-                        android:layout_width="20dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:background="@drawable/col48"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
-                        android:layout_height="20dp" />
+                       />
 
                     </RelativeLayout>
 
 
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card_view_txt"
+                        android:layout_width="wrap_content"
+                        app:cardCornerRadius="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:visibility="gone"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
 
+                        android:layout_below="@+id/rel3"
+                        android:elevation="@dimen/cardview_default_elevation"
+                        app:cardElevation="5dp"
+                        android:layout_height="wrap_content">
                         <TextView
                             android:id="@+id/txt_abt_details"
                             android:layout_width="wrap_content"
-                            android:layout_below="@+id/rel3"
+
                             android:textColor="#000"
                             android:layout_marginTop="10dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+
+                            android:paddingBottom="10dp"
                             android:visibility="gone"
                             android:text="lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum"
                             android:layout_height="wrap_content" />
+
+                    </android.support.v7.widget.CardView>
                 </RelativeLayout>
             </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -114,6 +143,7 @@
                             android:layout_height="1dp"
                             android:background="#000"
                             android:visibility="gone"
+
                             android:layout_marginRight="5dp"
                             android:layout_marginLeft="5dp"
                             android:layout_marginTop="15dp"
@@ -121,12 +151,21 @@
 
 
             <android.support.v7.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/tools"
+                card_view:cardElevation="2dp"
                 android:id="@+id/card_view1"
                 android:layout_width="match_parent"
-                android:layout_marginTop="1dp"
-                android:elevation="5dp"
+
+                android:layout_marginBottom="4dp"
+                android:paddingBottom="20dp"
+
+
                 android:layout_below="@+id/view1"
                 android:layout_height="wrap_content">
+
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -151,8 +190,8 @@
 
                     <ImageView
                         android:id="@+id/img_arrow1"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/col48"
@@ -161,12 +200,28 @@
 
                 </RelativeLayout>
 
+
                 <RelativeLayout
                     android:id="@+id/rel5"
                     android:layout_below="@+id/rel4"
                     android:layout_width="match_parent"
                     android:visibility="gone"
                     android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="5dp"
+                        app:cardElevation="2dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_height="wrap_content"
+                        >
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+
+                        android:layout_margin="5dp"
+                        android:layout_height="wrap_content">
 
                         <RelativeLayout
                             android:id="@+id/rel6"
@@ -273,14 +328,17 @@
                             android:layout_centerVertical="true"
                             android:textColor="#000"
                             android:layout_marginTop="10dp"
-
+                            android:background="@drawable/increment_decrement_focus"
                             android:layout_below="@+id/txt_map_hd"
-                            android:scaleType="centerInside"
-                            android:layout_height="wrap_content" />
+
+                            android:layout_height="200dp" />
 
                     </RelativeLayout>
                     </RelativeLayout>
+                    </android.support.v7.widget.CardView>
                  </RelativeLayout>
+                </RelativeLayout>
+
             </android.support.v7.widget.CardView>
                     <View
                         android:id="@+id/view2"
@@ -294,10 +352,15 @@
                         android:background="#000"/>
 
         <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            xmlns:app="http://schemas.android.com/tools"
+
+            card_view:cardElevation="2dp"
             android:id="@+id/card_view2"
             android:layout_width="match_parent"
-            android:layout_marginTop="1dp"
-            android:elevation="5dp"
+
+
 
             android:layout_below="@+id/view2"
             android:layout_height="wrap_content">
@@ -328,18 +391,19 @@
                             android:layout_height="wrap_content"
                             android:textColor="#000"
                             android:textSize="20dp"
-                            android:text="Review And Rating"/>
+                            android:text="Reviews And Ratings"/>
 
                         <ImageView
                             android:id="@+id/img_arrow2"
-                            android:layout_width="20dp"
-                            android:layout_alignParentTop="true"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+
                             android:textColor="#000"
 
-
+                            android:layout_centerVertical="true"
                             android:layout_alignParentRight="true"
                             android:background="@drawable/col48"
-                            android:layout_height="20dp" />
+                            />
 
 
                         <ProgressBar
@@ -350,6 +414,23 @@
                             android:layout_centerHorizontal="true"
                             android:layout_below="@+id/txt_review_rating_hd"
                             android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/txt_comments"
+                            android:layout_width="wrap_content"
+                            android:layout_below="@+id/pgr_bar"
+                            android:textColor="#000"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/txt_avg_rating"
+                            android:layout_width="wrap_content"
+                            android:layout_below="@+id/txt_comments"
+                            android:textColor="#000"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content" />
+
                         <ListView
                             android:id="@+id/list_view"
                             android:layout_width="match_parent"
@@ -362,7 +443,7 @@
                         <RelativeLayout
                             android:id="@+id/rel_more"
                             android:layout_width="match_parent"
-                            android:layout_below="@+id/list_view"
+                            android:layout_below="@+id/txt_avg_rating"
                             android:visibility="gone"
                             android:layout_height="match_parent">
 
@@ -469,13 +550,47 @@
 
 
     </ScrollView>
-    
-    <Button
-        android:id="@+id/btn_open_menu"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:text="Open Menu"
+
+        android:layout_height="40dp">
+    <Button
+        android:id="@+id/btn_open_menu"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_weight="1"
+        android:textColor="#fff"
+        android:text="View Menu"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="1dp"
         android:background="@drawable/button_focusable"
         android:layout_height="40dp"
         />
+
+        <Button
+            android:id="@+id/btn_start_order"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:textColor="#fff"
+            android:layout_alignParentRight="true"
+            android:text="Start Order"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="2dp"
+            android:background="@drawable/button_focusable"
+            android:layout_height="40dp"
+            />
+
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/fb_login"
+        android:visibility="gone"
+        android:layout_width="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/abc_ic_menu_share_mtrl_alpha"
+        android:layout_margin="25dp"
+        android:layout_height="30dp" />
 </RelativeLayout>

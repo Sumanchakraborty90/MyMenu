@@ -1,11 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_review_rating"
+    android:layout_width="match_parent"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/white_bg"
     tools:context="com.bitcanny.office.mymenu.ReviewRatingActivity">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:gravity="top"
+
+        android:layout_above="@+id/buton_lay"
+
         android:layout_height="match_parent">
     <include layout="@layout/app_tool" android:id="@+id/app_tl"></include>
 
@@ -14,6 +20,7 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_below="@+id/app_tl"
+
         android:elevation="10dp"
         android:layout_height="100dp">
 
@@ -60,38 +67,44 @@
                         android:id="@+id/img_view11"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:background="@drawable/veg" />
+                        android:visibility="gone"
+                      />
 
                     <ImageView
                         android:id="@+id/img_view22"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:background="@drawable/non_veg" />
+                        android:visibility="gone"
+                         />
 
                     <ImageView
                         android:id="@+id/img_view3"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
+                        android:visibility="gone"
 
-                        android:background="@drawable/fish" />
+                        />
 
                     <ImageView
                         android:id="@+id/img_view4"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:background="@drawable/high_chilli" />
+                        android:visibility="gone"
+                       />
 
                     <ImageView
                         android:id="@+id/img_view5"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:background="@drawable/chef_reco" />
+                        android:visibility="gone"
+                       />
 
                     <ImageView
                         android:id="@+id/img_view6"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:background="@drawable/high_rated" />
+                        android:visibility="gone"
+                       />
                 </LinearLayout>
 
                 <TextView
@@ -110,30 +123,66 @@
 
     </android.support.v7.widget.CardView>
 
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_below="@id/card_view"
+
+            android:layout_height="match_parent">
+
     <android.support.v7.widget.CardView
         android:id="@id/card_view1"
-        android:layout_below="@id/card_view"
+
         android:layout_width="match_parent"
-        android:layout_marginTop="1dp"
-        android:layout_height="200dp">
+
+
+        android:layout_height="wrap_content">
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
     </ListView>
 
     </android.support.v7.widget.CardView>
-        </RelativeLayout>
-
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/buton_lay"
         android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+      android:background="#fff"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_centerVertical="true"
+            android:elevation="5dp"
+            app:cardCornerRadius="4dp"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:textColor="#fff"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/button_focusable"
+                android:text="Submit Review And Rating"
+                android:layout_height="wrap_content" />
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rel_bottom"
+        android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_height="200dp">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
       android:layout_alignParentTop="true"
-        android:layout_marginTop="3dp"
+
 
         android:layout_height="wrap_content">
 
@@ -147,16 +196,17 @@
             <RelativeLayout
                 android:id="@+id/rel_val"
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content">
 
                 <TextView
-
+                    android:id="@+id/txt_rating"
                     android:layout_width="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:text="Rate"
                     android:textSize="20dp"
                     android:textColor="#000"
-                    android:paddingLeft="15dp"
+                    android:paddingLeft="10dp"
                     android:layout_centerVertical="true"
                     android:layout_height="wrap_content" />
 
@@ -178,6 +228,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
        android:background="#fff"
+        android:visibility="gone"
        android:layout_alignParentBottom="true"
         android:padding="10dp"
         android:layout_height="wrap_content">
@@ -209,13 +260,14 @@
                 android:maxLines="4"
                 style="@style/MyCustomStyle"
                 android:padding="5dp"
+
                 android:minHeight="50dp"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/btn_save"
+                android:id="@+id/btn_savee"
                 android:layout_width="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginTop="5dp"
                 android:background="#92b900"
                 android:layout_below="@+id/edt_co"
                 android:text="Save"
@@ -226,6 +278,7 @@
    <!-- </android.support.v7.widget.CardView>-->
 
     </RelativeLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/white_bg"
-    android:theme="@style/MyCustomStyle"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
     tools:context="com.bitcanny.office.mymenu.PlaceOrderActivity">
 
     <include
@@ -50,8 +50,9 @@
                     <ImageView
                         android:id="@+id/img_view1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scaleType="fitXY"
+                        android:layout_height="200dp"
+
+
                         />
 
                    <!-- <ImageView
@@ -115,38 +116,43 @@
                             android:id="@+id/img_view11"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:background="@drawable/veg" />
+                            android:visibility="gone"
+                           />
 
                         <ImageView
                             android:id="@+id/img_view22"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:background="@drawable/non_veg" />
+                            android:visibility="gone"
+                            />
 
                         <ImageView
                             android:id="@+id/img_view3"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-
-                            android:background="@drawable/fish" />
+                            android:visibility="gone"
+                             />
 
                         <ImageView
                             android:id="@+id/img_view4"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:background="@drawable/high_chilli" />
+                            android:visibility="gone"
+                            />
 
                         <ImageView
                             android:id="@+id/img_view5"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:visibility="gone"
                             android:background="@drawable/chef_reco" />
 
                         <ImageView
                             android:id="@+id/img_view6"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:background="@drawable/high_rated" />
+                            android:visibility="gone"
+                            />
                     </LinearLayout>
 
 
@@ -179,7 +185,7 @@
                     android:id="@+id/card_view1"
                     android:layout_width="match_parent"
                     android:layout_below="@+id/card_view"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginTop="5dp"
                     android:elevation="5dp"
                     android:background="#fff"
                     android:layout_height="wrap_content">
@@ -203,6 +209,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+
                         android:textColor="#000"
                         android:textSize="20dp"
                         android:text="About the food"/>
@@ -211,7 +218,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@drawable/col48"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="5dp"
                         android:layout_alignParentRight="true"
                         android:id="@+id/open_img1" />
 
@@ -219,7 +226,7 @@
                     <TextView
                         android:id="@+id/txt_abt"
                         android:layout_below="@+id/abt_the_food"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#000"
@@ -233,7 +240,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_below="@+id/card_view1"
-                    android:layout_marginTop="1dp"
+                    android:layout_marginTop="5dp"
                     android:elevation="5dp"
                     android:layout_height="wrap_content">
 
@@ -253,10 +260,12 @@
                     android:layout_height="wrap_content">
 
                         <TextView
+                            android:id="@+id/txt_review"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_alignParentTop="true"
+
                             android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
                             android:textSize="20dp"
                             android:textColor="#000"
                             android:text="Review"
@@ -266,7 +275,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_alignParentRight="true"
-                            android:layout_marginTop="3dp"
+                           android:layout_centerVertical="true"
                             android:background="@drawable/col48"
                             android:id="@+id/open_img2"/>
 
@@ -278,14 +287,30 @@
                     android:id="@+id/rel_lay4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:visibility="gone"
                     android:background="#FFF"
                     android:alpha=".47"
                     android:layout_below="@+id/rel_lay3">
+
+                    <TextView
+                        android:id="@+id/txt_comment_post"
+                        android:layout_width="wrap_content"
+
+                        android:textColor="#000"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/txt_avg_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_below="@+id/txt_comment_post"
+                        android:textColor="#000"
+                        android:layout_height="wrap_content" />
                 <ListView
                     android:id="@+id/list"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
 
                    >
@@ -293,7 +318,9 @@
                 </ListView>
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/txt_avg_rating"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="5dp"
                     android:layout_height="wrap_content">
                     <TextView
                         android:id="@+id/txt_more"

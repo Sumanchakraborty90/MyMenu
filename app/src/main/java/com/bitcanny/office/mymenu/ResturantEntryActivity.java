@@ -1,26 +1,32 @@
 package com.bitcanny.office.mymenu;
 
 
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,19 +56,22 @@ import com.google.android.gms.internal.ft;*/
 
 
 public class ResturantEntryActivity extends MainActivityqr{
-	
+	PopupWindow pwindo;
 	Button btn_submit;
 	ImageButton img_cam; 
 	EditText edt_rest_code;
-	String resturantCode = null;
+	String resturantCode = "";
 	ProgressDialog dialog;
-	TextView lbl_bitcanny;
+	TextView lbl_bitcanny,txt_scan_qr;
+	static  String ResImageUrl="";
 	ProgressBar bar;
 	ArrayList<Map<String, String>> list;
 	static ArrayList<Map<String, String>> list1 = null;
 	public static List<Map<String,String>> order = Collections.EMPTY_LIST;
-
+	RelativeLayout rel_main;
+	static String ResturantName;
 	List<FrontEndMenuModel> frontEndMenuModelList;
+	ImageButton img_btn_hlp;
 
 	public  static ArrayList<Map<String,String>> list2 ;
 	public  static ArrayList<Map<String,String>> list3 ;
@@ -113,9 +122,19 @@ public class ResturantEntryActivity extends MainActivityqr{
 	private static String MENUITEMISCHEFRECOMMEND = "MenuItemIsChefRecommend";
 	private static String MENUITEMNAME = "MenuItemName";
 	private static String MENUITEMPRICE = "MenuItemPrice";
+
+
+	private static String TAG_ID = "tag_id";
+	private static String CHILI = "isChillies";
+	private static String FISH = "isFish";
+	private static String NONVEG = "isNonVeg";
+	private static String VEG = "isVeg";
+
+
+	String tag_id,chili,fish,nonveg,veg,menuItemId;
 	//private static String TAGNAME = "TagName";
 
-	String CategoryID,CategoryImageURL,CategoryName;
+	String CategoryID,CategoryImageURL,CategoryName,taxID,taxname,taxType,taxValue;
 	String MenuItemDesc,MenuItemID,MenuItemImageURL,MenuItemIsChefRecommend,MenuItemName,MenuItemPrice,avg_rating;
 	
 	private static String LAT = "lat";
@@ -149,6 +168,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 	String RestaurantImageUrl;
 	PlaceOrderSqlHelperDao dao;
 	ResturantModel model;
+	static String Resturant_code;
 
 	private static String MYPREF = "mypref";
 	private static String RESTURANT_CODE = "resturant_code";
@@ -172,18 +192,49 @@ public class ResturantEntryActivity extends MainActivityqr{
 		edt_rest_code = (EditText) findViewById(R.id.edt_rest_code);
 		lbl_bitcanny = (TextView) findViewById(R.id.lbl_bitcanny);
 		bar = (ProgressBar) findViewById(R.id.progressBar1);
+		txt_scan_qr= (TextView)findViewById(R.id.txt_scan_qr);
+		img_btn_hlp= (ImageButton)findViewById(R.id.img_btn_hlp);
 		order = new ArrayList<>();
 		 list = new ArrayList<Map<String, String>>();
 		 list1 = new ArrayList<>();
+		rel_main = (RelativeLayout) findViewById(R.id.rel_main);
 
 
+		try {
+			Bundle bundle = getIntent().getExtras();
+			resturantCode = bundle.getString("resturant_code");
+
+		}catch (Exception e){
+
+			e.printStackTrace();
+		}
+
+		try{
+
+			if (!resturantCode.equals("")){
+				btn_submit.setClickable(false);
+				new CheckResturantCode().execute();
+
+			}
+
+
+		}catch (Exception e){
+
+			e.printStackTrace();
+		}
+/*
+		Intent intent1 = new Intent(ResturantEntryActivity.this,ResturantInfo.class);
+		overridePendingTransition(R.anim.abc_fade_out, R.anim.abc_fade_in);
+		startActivity(intent1);*/
 		if(sharedPreferences.getString("resturant_code", "").equals("")) {
 
-
+		//	Log.d("No resturant code is there","true");
 		}else{
-			new Thread(new Runnable() {
+
+		//	setContentView(R.layout.null);
+			/*new Thread(new Runnable() {
 				public void run() {
-					try {
+					*//*try {
 						if (getFromSdcard("/MenuApp/Resturant/").size() == dao.getSliderImageUrl().size()) {
 
 							for (int index = 0; index < dao.getSliderImageUrl().size(); index++) {
@@ -198,10 +249,10 @@ public class ResturantEntryActivity extends MainActivityqr{
 
 						e.printStackTrace();
 					}
-
+*//*
 				}
 			}).start();
-
+*/
 
 
 			/*try {
@@ -231,16 +282,69 @@ public class ResturantEntryActivity extends MainActivityqr{
 			}catch (Exception e){
 				e.printStackTrace();
 			}*/
+			try {
+
+				new Thread() {
+					public void run() {
+						if (getFromSdcard("/MenuApp/Resturant/").size() == dao.getSliderImageUrl().size()) {
+
+							for (int index = 0; index < dao.getSliderImageUrl().size(); index++) {
+
+								DownloadFromUrl("/MenuApp/Resturant/", index + ".jpg", JsonFunctions.BASE_URL + dao.getSliderImageUrl().get(index).getSlider_image_url());
+
+							}
+
+						}
+					}
+				}.start();
+
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+			//Log.d("No resturant code is there","false");
 			Intent intent = new Intent(ResturantEntryActivity.this,ResturantInfo.class);
+			overridePendingTransition(R.anim.abc_fade_out, R.anim.abc_fade_in);
 			startActivity(intent);
 		}
+
+		txt_scan_qr.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Intent intent = new Intent(ResturantEntryActivity.this,BarCodeActivity.class);
+				overridePendingTransition(R.anim.abc_fade_out, R.anim.abc_fade_in);
+				startActivity(intent);
+
+			}
+		});
+
+		img_btn_hlp.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				rel_main.setAlpha((float).27);
+				initiatePopupWindow();
+			}
+		});
+
 		edt_rest_code.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
 				if ((actionId & EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_DONE) {
+
 					resturantCode = edt_rest_code.getText().toString();
+					try {
+						if (resturantCode.equals("")) {
+							resturantCode = edt_rest_code.getText().toString();
+
+						}
+					}catch (Exception e){
+
+						e.printStackTrace();
+					}
 					hideKeyboard();
 
 
@@ -255,8 +359,19 @@ public class ResturantEntryActivity extends MainActivityqr{
 			
 			@Override
 			public void onClick(View v) {
-				
+				btn_submit.setClickable(false);
 				resturantCode = edt_rest_code.getText().toString();
+
+				try {
+					if (resturantCode.contains("")) {
+
+						resturantCode = edt_rest_code.getText().toString();
+
+					}
+				}catch (Exception e){
+
+					e.printStackTrace();
+				}
 				hideKeyboard();
 
 
@@ -276,7 +391,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 			public void onClick(View v) {
 
 			Intent intent = new Intent(ResturantEntryActivity.this,BarCodeActivity.class);
-
+				overridePendingTransition(R.anim.abc_fade_out, R.anim.abc_fade_in);
 				startActivity(intent);
 
 				
@@ -345,8 +460,10 @@ public class ResturantEntryActivity extends MainActivityqr{
 		
 		@Override
 		protected Void doInBackground(Void... params) {
-		
-		try{
+
+
+
+			try{
 			list2 = new ArrayList<>();
 			list3 = new ArrayList<>();
 			JsonFunctions functions = new JsonFunctions(handler);	
@@ -364,6 +481,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 			resturantId = info.getString(RESTAURANTID);
 			restaurantLogImage=info.getString(RESTAURANTLOGIMAGE);
 		    restaurantName= info.getString(RESTAURANTNAME);
+		    Log.d("restaurantName",restaurantName);
 			restaurantPhone1= info.getString(RESTAURANTPHONE1);
 			restaurantPhone2 =info.getString(RESTAURANTPHONE2);	
 			restaurantPostCode=info.getString(RESTAURANTPOSTCODE);	
@@ -413,12 +531,20 @@ public class ResturantEntryActivity extends MainActivityqr{
 					MenuItemDesc = jsonObject.getString(MENUITEMDESC);
 					MenuItemID = jsonObject.getString(MENUITEMID);
 					MenuItemImageURL =jsonObject.getString(MENUITEMIMAGEURL);
-					MenuItemIsChefRecommend = jsonObject.getString(MENUITEMISCHEFRECOMMEND);
+				//	MenuItemIsChefRecommend = jsonObject.getString(MENUITEMISCHEFRECOMMEND);
 					MenuItemName = jsonObject.getString(MENUITEMNAME);
 					MenuItemPrice = jsonObject.getString(MENUITEMPRICE);
-					TagName = jsonObject.getString(TAGNAME);
 
-					dao.addToMenu(new MenuInfoModel(CategoryName,avg_rating,MenuItemDesc,MenuItemImageURL,"0",MenuItemIsChefRecommend,MenuItemName,MenuItemPrice,TagName));
+
+					chili = jsonObject.getString(CHILI);
+					fish = jsonObject.getString(FISH);
+					nonveg = jsonObject.getString(NONVEG);
+					veg = jsonObject.getString(VEG);
+
+					dao.addToTagInfo(new TagInfoModel( String.valueOf(chili), String.valueOf(fish),String.valueOf(nonveg), String.valueOf(veg),  String.valueOf(MenuItemID)));
+					//TagName = jsonObject.getString(TAGNAME);
+
+					dao.addToMenu(new MenuInfoModel(CategoryName,String.valueOf(avg_rating),MenuItemDesc,String.valueOf(MenuItemID),MenuItemImageURL,"0","0",MenuItemName,MenuItemPrice,"0"));
 
 				}
 
@@ -439,7 +565,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 
 
 				
-				try{
+				/*try{
 				JSONArray menuTagInfo = object2.getJSONArray(MENUTAGINFO);
 				
 				for(int index=0;index<menuTagInfo.length();index++){
@@ -461,7 +587,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 				}catch(Exception e){
 					
 					e.printStackTrace();
-				}
+				}*/
 				Map<String, String> map1 = new HashMap<>();
 				map1.put(FRONTENDMENUID, FrontendMenuID);
 				map1.put(FRONTENDMENUNAME, FrontendMenuName);
@@ -499,6 +625,24 @@ public class ResturantEntryActivity extends MainActivityqr{
 
 			list1.add(map3);
 
+
+				JSONArray taxInfo = info.getJSONArray("taxInfo");
+
+				for (int index = 0; index < taxInfo.length(); index++) {
+
+					JSONObject jsonObject = taxInfo.getJSONObject(index);
+
+					taxID = jsonObject.getString("taxID");
+
+					taxname = jsonObject.getString("taxname");
+
+					taxType = jsonObject.getString("taxType");
+					taxValue = jsonObject.getString("taxValue");
+
+					dao.addToTaxCHarges(new TaxChargesModel(taxType, taxValue, taxname));
+				}
+
+
 			JSONArray imageInfo = info.getJSONArray(IMAGEINFO);
 
 			for(int index = 0;index<imageInfo.length();index++){
@@ -507,6 +651,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 
 				RestaurantImageID = object1.getString(RESTAURANTIMAGEID);
 				RestaurantImageUrl = object1.getString(RESTAURANTIMAGEURL);
+				ResImageUrl = RestaurantImageUrl;
 				dao.addToSlider(new SliderImageModel(RestaurantImageUrl));
 				DownloadFromUrl("/MenuApp/Resturant/",index+".jpg",JsonFunctions.BASE_URL +RestaurantImageUrl );
 				Map<String,String> map2 = new HashMap<>();
@@ -538,6 +683,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 
 
 			}
+
 			}catch(Exception e){
 				
 				e.printStackTrace();
@@ -577,7 +723,7 @@ public class ResturantEntryActivity extends MainActivityqr{
 			try{
 
 			if(type.equals("success")){
-
+				btn_submit.setClickable(true);
 				addResturant(resturantCode);
 
 				
@@ -604,13 +750,13 @@ public class ResturantEntryActivity extends MainActivityqr{
 
 				intent.putExtra(LAT, lat);
 				intent.putExtra(LNG, lng);
-				
+				overridePendingTransition(R.anim.abc_fade_out, R.anim.abc_fade_in);
 				startActivity(intent);
-				//finish();
+
 				//list1.clear();
 				//Toast.makeText(ResturantEntryActivity.this,"Success", Toast.LENGTH_LONG).show();
 			}else{
-				
+				btn_submit.setClickable(true);
 				Toast.makeText(ResturantEntryActivity.this,"Wrong resturant code", Toast.LENGTH_LONG).show();
 				
 				
@@ -762,4 +908,39 @@ public class ResturantEntryActivity extends MainActivityqr{
 
 		dao.close();
 	}
+
+
+	private void initiatePopupWindow() {
+		try {
+// We need to get the instance of the LayoutInflater
+			LayoutInflater inflater = (LayoutInflater) ResturantEntryActivity.this
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View layout = inflater.inflate(R.layout.screen_popup,
+					(ViewGroup) findViewById(R.id.popup_element));
+			pwindo = new PopupWindow(layout, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT, true);
+			pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
+			pwindo.setBackgroundDrawable(new ColorDrawable(
+					android.graphics.Color.TRANSPARENT));
+			pwindo.setAnimationStyle(R.anim.abc_fade_in);
+
+			ImageButton btnClosePopup = (ImageButton) layout.findViewById(R.id.btn_close_popup);
+			btnClosePopup.setOnClickListener(cancel_button_click_listener);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private OnClickListener cancel_button_click_listener = new OnClickListener() {
+		public void onClick(View v) {
+			pwindo.setAnimationStyle(R.anim.abc_fade_out);
+			pwindo.dismiss();
+			rel_main.setAlpha(1);
+
+		}
+	};
+
+
+
+
 }

@@ -23,6 +23,9 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
     public static String MENU = "menu";
     public static String SLIDERMENU = "slidermenu";
     public static String SUBCATEGORYIMAGE = "subnetcategory";
+    public static String TAXCHARGES = "taxcharges";
+    public static String TAGINFO = "taginfo";
+
 
 
     private static String order_id = "order_id";
@@ -31,7 +34,7 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
     private static String order_item_quantity = "order_item_quantity";
     private static String user_id = "user_id";
     private static String order_item_image_url = "order_item_image_url";
-
+    private static String  user_order_flag = "user_order_flag";
 
 
 
@@ -68,6 +71,7 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
     private static int menu_id;
     private static String avg_rating = "avg_rating";
     private static String MenuItemDesc = "MenuItemDesc";
+    private static String MenuID = "MenuID";
     private static String MenuItemID = "MenuItemID";
     private static String MenuItemImageURL = "MenuItemImageURL";
     private static String SelectedItem = "SelectedItem";
@@ -82,6 +86,19 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
     private static String subcategoryimageid = "subcategoryimageid";
     private static String subcategoryimageurl = "subcategoryimageurl";
     private static String subcategoryname = "subcategoryname";
+
+    private static String tax_charges_id = "slider_image_id";
+    private static String tax_charges_type = "tax_charges_type";
+    private static String tax_charges_amount = "tax_charges_amount";
+    private static String tax_charges_name = "tax_charges_name";
+
+    private static String tag_id = "tag_id";
+    private static String chili = "chili";
+    private static String fish = "fish";
+    private static String nonveg = "nonveg";
+    private static String veg = "veg";
+    private static String menuItemId = "menuItemId";
+
 
 
 
@@ -104,7 +121,9 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
                 + order_item_price + " TEXT ,"
                 + order_item_quantity + " TEXT ,"
                 + user_id + " TEXT ,"
-                + order_item_image_url + " TEXT "
+                + order_item_image_url + " TEXT ,"
+                + user_order_flag +" INTEGER ,"
+                + MenuID +" TEXT "
 
                 + ");";
 
@@ -140,8 +159,10 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
                 + " );";
 
         String menu = "CREATE TABLE " + MENU + " ( "
-                + MenuItemID + " INTEGER PRIMARY KEY ,"
+                + MenuID +" INTEGER PRIMARY KEY AUTOINCREMENT ,"
+                + MenuItemID + " INTEGER  ,"
                 + avg_rating + " TEXT , "
+
                 + MenuItemDesc + " TEXT ,"
                 + category_name + " TEXT , "
                 + MenuItemImageURL + " TEXT , "
@@ -150,6 +171,16 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
                 + MenuItemName + " TEXT , "
                 + MenuItemPrice + " TEXT , "
                 + TagName + " TEXT "
+                + " );";
+        String tagInfo =  "CREATE TABLE " + TAGINFO + " ( "
+                + tag_id + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + chili + " TEXT , "
+
+                + fish + " TEXT ,"
+                + veg + " TEXT , "
+                + nonveg + " TEXT , "
+                + menuItemId + " TEXT  "
+
                 + " );";
 
         String slider = "CREATE TABLE "+SLIDERMENU+ " ( "
@@ -163,6 +194,13 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
                 +subcategoryname+" TEXT "
                 +" ); ";
 
+        String tax = "CREATE TABLE "+TAXCHARGES+ " ( "
+                +tax_charges_id+" INTEGER PRIMARY KEY AUTOINCREMENT, "
+                +tax_charges_type+" TEXT ,"
+                +tax_charges_amount+" TEXT ,"
+                +tax_charges_name+" TEXT "
+                +" ); ";
+
         db.execSQL(resturant);
         db.execSQL(getFrontEndMenu());
         db.execSQL(returnVal);
@@ -170,6 +208,8 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
         db.execSQL(category);
         db.execSQL(menu);
         db.execSQL(slider);
+        db.execSQL(tax);
+        db.execSQL(tagInfo);
       //  db.execSQL(localImage);
        // db.close();
         //  db.execSQL(sql.getCategory());
@@ -198,6 +238,9 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
         db.execSQL(sql.dropIfExists() + CATEGORY);
         db.execSQL(sql.dropIfExists() + MENU);
         db.execSQL(sql.dropIfExists() + SLIDERMENU);
+        db.execSQL(sql.dropIfExists() + TAXCHARGES);
+        db.execSQL(sql.dropIfExists() + TAGINFO);
+
      //   db.execSQL(sql.dropIfExists() + SUBCATEGORYIMAGE);
         onCreate(db);
        // db.close();
@@ -219,6 +262,77 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
 
     }
 
+
+    public void addToTagInfo(TagInfoModel model){
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        //values.put("tag_id",model.ge);
+        values.put("chili",model.getChili());
+        values.put("fish",model.getFish());
+        values.put("veg",model.getVeg());
+        values.put("nonveg",model.getNonveg());
+        values.put("menuItemId",model.getMenuItemId());
+
+        database.insert(TAGINFO,null,values);
+        database.close();
+
+
+    }
+
+    public void addToTaxCHarges(TaxChargesModel model) {
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("tax_charges_type", model.getTax_charges_type());
+        values.put("tax_charges_amount", model.getTax_charges_amount());
+        values.put("tax_charges_name", model.getTax_charges_name());
+
+        sqLiteDatabase.insert(TAXCHARGES, null, values);
+        sqLiteDatabase.close();
+
+    }
+
+    public List<TaxChargesModel> getTaxDetails() {
+
+        List<TaxChargesModel> list = new ArrayList<>();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        Cursor cursor = database.rawQuery("Select tax_charges_type,tax_charges_amount,tax_charges_name from " + TAXCHARGES , null);
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                TaxChargesModel model = new TaxChargesModel();
+
+                model.setTax_charges_type(cursor.getString(0));
+                model.setTax_charges_amount(cursor.getString(1));
+                //model.setCategory_name(cursor.getString(2));
+                model.setTax_charges_name(cursor.getString(2));
+               /* model.setMenuItemIsChefRecommend(cursor.getString(3));
+                model.setMenuItemName(cursor.getString(4));
+                model.setMenuItemPrice(cursor.getString(5));
+                model.setTagName(cursor.getString(6));
+                model.setMenu_id(Integer.valueOf(cursor.getString(7)));*/
+                list.add(model);
+
+            } while (cursor.moveToNext());
+
+
+        }
+
+        database.close();
+        cursor.close();
+
+        return list;
+
+    }
 
     public void addToSubCategoryImage(SubCategoryImageModel model){
 
@@ -260,7 +374,7 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
         // return contact
         return value;
     }
-    public void addToOrderValue(String order_name,String item_price,String order_item_quantity,String url) {
+    public void addToOrderValue(String order_name,String item_price,String order_item_quantity,String url,String menuID,String user_order_flag) {
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -270,7 +384,10 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
         values.put("order_item_price",item_price);
         values.put("order_item_quantity", order_item_quantity);
        // values.put("user_id", model.getOrder_item_quantity());
-       values.put("order_item_image_url",url);
+        values.put("order_item_image_url",url);
+        values.put("user_order_flag",user_order_flag);
+        values.put("MenuID",menuID);
+
         sqLiteDatabase.insert(DatabaseSQL.PLACEORDER, null, values);
         sqLiteDatabase.close();
 
@@ -314,7 +431,7 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
 
         SQLiteDatabase database = this.getWritableDatabase();
 
-        Cursor cursor = database.rawQuery("Select avg_rating,MenuItemDesc,MenuItemImageURL,MenuItemIsChefRecommend,MenuItemName,MenuItemPrice,TagName from " + MENU + " where category_name =?", new String[]{category_name});
+        Cursor cursor = database.rawQuery("Select DISTINCT avg_rating,MenuItemDesc,MenuItemImageURL,MenuItemIsChefRecommend,MenuItemName,MenuItemPrice,TagName,MenuItemID from " + MENU + " where category_name =?", new String[]{category_name});
 
         if (cursor.moveToFirst()) {
 
@@ -330,6 +447,46 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
                 model.setMenuItemName(cursor.getString(4));
                 model.setMenuItemPrice(cursor.getString(5));
                 model.setTagName(cursor.getString(6));
+                model.setMenu_id(Integer.valueOf(cursor.getString(7)));
+                list.add(model);
+
+            } while (cursor.moveToNext());
+
+
+        }
+
+        database.close();
+        cursor.close();
+
+        return list;
+
+    }
+
+    public List<TagInfoModel> getTagDetails(String menuItemId) {
+
+        List<TagInfoModel> list = new ArrayList<>();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        Cursor cursor = database.rawQuery("Select tag_id,chili,fish,veg,nonveg from " + TAGINFO + " where menuItemId =?", new String[]{menuItemId});
+
+
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                TagInfoModel model = new TagInfoModel();
+
+                model.setTag_id(cursor.getString(0));
+                Log.d("tagId", cursor.getString(0));
+                model.setChili(cursor.getString(1));
+                Log.d("ChiliVAl", cursor.getString(1));
+                //model.setCategory_name(cursor.getString(2));
+                model.setFish(cursor.getString(2));
+                model.setVeg(cursor.getString(3));
+                model.setNonveg(cursor.getString(4));
+               // model.setMenuItemId(cursor.getString(5));
 
                 list.add(model);
 
@@ -431,7 +588,7 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
 
         SQLiteDatabase database = this.getWritableDatabase();
 
-        Cursor cursor = database.rawQuery("Select category_image_url,category_name from category", null);
+        Cursor cursor = database.rawQuery("Select DISTINCT category_image_url,category_name from category", null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -497,7 +654,7 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
             do {
                 FrontEndMenuModel model = new FrontEndMenuModel();
 
-                model.setFront_end_menu_name(cursor.getString(1));
+                model.setFront_end_menu_name(cursor.getString(0));
 
                 modelList.add(model);
 
@@ -528,6 +685,43 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
                 orderToCartAdapterModel.setOrder_item_quantity(cursor.getString(3));
                 orderToCartAdapterModel.setUser_id(cursor.getString(4));
                 orderToCartAdapterModel.setOrder_item_image_url(cursor.getString(5));
+                orderToCartAdapterModel.setUser_order_flag(cursor.getString(6));
+
+                orderToCartAdapterModel.setMenu_id(cursor.getString(7));
+
+                modelList.add(orderToCartAdapterModel);
+            } while (cursor.moveToNext());
+
+
+        }
+        database.close();
+        cursor.close();
+        return modelList;
+    }
+
+
+    public List<OrderToCartAdapterModel> getAllOrderDetailsOfOtherUsers() {
+
+        List<OrderToCartAdapterModel> modelList = new ArrayList<>();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        Cursor cursor = database.rawQuery(sql.getAllOrderOfOtherUsers(), new String[]{"1","0"});
+
+        if (cursor.moveToFirst()) {
+
+            do {
+                OrderToCartAdapterModel orderToCartAdapterModel = new OrderToCartAdapterModel();
+
+                orderToCartAdapterModel.setOrder_name(cursor.getString(0));
+                orderToCartAdapterModel.setOrder_item_price(cursor.getString(1));
+                orderToCartAdapterModel.setOrder_item_quantity(cursor.getString(2));
+                orderToCartAdapterModel.setUser_id(cursor.getString(3));
+                orderToCartAdapterModel.setOrder_item_image_url(cursor.getString(4));
+                orderToCartAdapterModel.setUser_order_flag(cursor.getString(5));
+
+                orderToCartAdapterModel.setMenu_id(cursor.getString(6));
+
                 modelList.add(orderToCartAdapterModel);
             } while (cursor.moveToNext());
 
@@ -541,7 +735,7 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
 
     public int updateSelectedItems(String orderName ,String selecteditems){
 
-        Log.d("selecteditems",selecteditems);
+//        Log.d("selecteditems",selecteditems);
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -554,6 +748,58 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
 
         db.close();
         return val;
+
+    }
+
+    public void deleteOrderedItems(){
+
+        //Log.d("selecteditems",selecteditems);
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + PLACEORDER);
+
+       /* ContentValues values = new ContentValues();
+        values.put("order_item_quantity", selecteditems);
+        // values.put(KEY_PH_NO, contact.getPhoneNumber());
+
+        // updating row
+        int val = db.update(PLACEORDER, values, "order_name" + " = ?",
+                new String[]{orderName});*/
+
+        db.close();
+
+
+    }
+
+
+    public int getSelectedItemsSummation(){
+
+        List<LatLngModel> list = new ArrayList<>();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        Cursor cursor = database.rawQuery("Select SelectedItem from " + MENU,/*new String[] { resturant_Id}*/null);
+
+        int value = 0;
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                LatLngModel model = new LatLngModel();
+
+                value = value+Integer.valueOf(cursor.getString(0));
+
+
+               // list.add(model);
+
+            } while (cursor.moveToNext());
+
+        }
+        database.close();
+        cursor.close();
+
+        return value;
+
+
 
     }
 
@@ -637,25 +883,29 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();*/
 
-        Log.d("order_name",order_name);
+       // Log.d("order_name",order_name);
         String selectQuery = "SELECT  order_item_quantity FROM " + PLACEORDER+ " where order_name =?";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(order_name)});
+        int value = 0;
+    try {
 
-        int value=0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
 
-                Log.d("value from database",Integer.parseInt(cursor.getString(0))+"");
-                value =  Integer.parseInt(cursor.getString(0));
+              Log.d("value from database",Integer.parseInt(cursor.getString(0))+"");
+                value = Integer.parseInt(cursor.getString(0));
 
                 // Adding contact to list
-               // contactList.add(contact);
+                // contactList.add(contact);
             } while (cursor.moveToNext());
         }
 
+    }catch (Exception e){
 
+        e.printStackTrace();
+    }
         db.close();
         // return contact
         return value;
@@ -689,7 +939,8 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
         }
 
 
-
+        db.close();
+        cursor.close();
         // return contact
         return value;
     }
@@ -829,7 +1080,9 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
        // values.put(DatabaseSQL.resturant_Id,model.getResturantId());
-        values.put(DatabaseSQL.resturant_name,model.getRestaurantName());
+
+        Log.d("resturant_name",model.getRestaurantName());
+        values.put(DatabaseSQL.resturant_name, model.getRestaurantName());
         values.put(DatabaseSQL.resturant_log_image,model.getRestaurantLogImage());
         values.put(DatabaseSQL.phone1,model.getRestaurantPhone1());
         values.put(DatabaseSQL.phone2,model.getRestaurantPhone2());
@@ -857,7 +1110,7 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
             do{
                 ResturantModel model = new ResturantModel();
 
-                model.setRestaurantName(cursor.getString(1));
+                model.setRestaurantName(cursor.getString(2));
                 model.setResturantId(cursor.getString(0));
                 model.setRestaurantPhone1(cursor.getString(8));
                 model.setRestaurantPhone2(cursor.getString(7));
@@ -944,6 +1197,21 @@ public class PlaceOrderSqlHelperDao extends SQLiteOpenHelper {
         cursor.close();
 
         return list;
+
+    }
+
+    public void updateItemSelectedToZero(String menuName){
+
+        SQLiteDatabase database = this.getWritableDatabase();
+           /* ContentValues args = new ContentValues();
+            args.put(SelectedItem, "0");
+
+            return database.update(MENU, args,null, new String[{"menuName"}]) > 0;*/
+        String strSQL = "UPDATE "+ MENU +" SET "+ SelectedItem +" = "+ 0/*+" WHERE "+ MenuItemName +" = "+ menuName*/;
+
+        database.execSQL(strSQL);
+
+
 
     }
 }

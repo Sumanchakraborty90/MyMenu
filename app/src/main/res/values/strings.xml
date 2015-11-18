@@ -2,7 +2,7 @@
     <string name="app_name">MyMenu</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">End Order</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -20,12 +20,12 @@
         <string name="title_activity_my_place_order">MyPlaceOrder</string>
         <string name="title_activity_chefs_recomendation">ChefsRecomendation</string>
         <string name="title_activity_order_to_cart">OrderToCartActivity</string>
-        <string name="title_activity_cart_order">CartOrderActivity</string>
+        <string name="title_activity_cart_order">My Cart</string>
         <string name="title_activity_registration">Registration</string>
-    <string name="title_activity_login">LogIn</string>
-        <string name="title_activity_review_rating">ReviewRatingActivity</string>
-        <string name="title_activity_my_previous_resturants">MyPreviousResturants</string>
-        <string name="title_activity_resturant_review_rating">ResturantReviewRating</string>
+        <string name="title_activity_login">LogIn</string>
+        <string name="title_activity_review_rating">Reviews And Ratings</string>
+        <string name="title_activity_my_previous_resturants">My Previous Resturants</string>
+        <string name="title_activity_resturant_review_rating">Reviews And Ratings</string>
         <string name="title_activity_payment_option">PaymentOption</string>
 
     <string name="facebook_app_id">1629127177371914</string>
@@ -44,4 +44,5 @@
 
     </array>
         <string name="title_activity_face_book">FaceBookActivity</string>
+        <string name="title_activity_log_in_with_face_book">LogInWithFaceBook</string>
 </resources>

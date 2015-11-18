@@ -3,6 +3,7 @@
     android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:background="@drawable/white_bg"
     android:paddingBottom="5dp"
     tools:context="com.bitcanny.office.mymenu.RegistrationActivity">
@@ -46,8 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_below="@+id/rel1">
 
         <EditText
@@ -56,30 +57,42 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:padding="4dp"
-            android:background="@drawable/edit_view_style"
-            style="@style/MyCustomStyle"
+            android:background="@drawable/edit_text"
+            android:textColor="#000"
+            style="@style/ThemeOverlay.AppCompat.Light"
+
+            android:cursorVisible="true"
+            android:focusable="true"
+            android:textColorHint="@color/focusable"
+
             android:hint="Name"/>
 
         <EditText
             android:id="@+id/txt_ph_number"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="10dp"
+
+            android:textColor="#000"
             android:layout_below="@+id/txt_user_name"
-            android:background="@drawable/edit_view_style"
-            style="@style/MyCustomStyle"
+            android:textColorHint="@color/focusable"
+            style="@style/ThemeOverlay.AppCompat.Light"
+            android:layout_margin="10dp"
             android:padding="4dp"
+            android:background="@drawable/edit_text"
             android:hint="Phone no."/>
 
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="10dp"
+
+            android:textColor="#000"
             android:layout_below="@+id/txt_ph_number"
-            android:background="@drawable/edit_view_style"
-            style="@style/MyCustomStyle"
+            android:textColorHint="@color/focusable"
+            style="@style/ThemeOverlay.AppCompat.Light"
+            android:layout_margin="10dp"
             android:padding="4dp"
+            android:background="@drawable/edit_text"
             android:hint="Email"/>
 
         <EditText
@@ -87,10 +100,14 @@
             android:layout_width="match_parent"
             android:layout_below="@+id/email"
             android:layout_height="40dp"
+
+            android:textColor="#000"
+            android:textColorHint="@color/focusable"
+            style="@style/ThemeOverlay.AppCompat.Light"
             android:layout_margin="10dp"
-            android:background="@drawable/edit_view_style"
             android:padding="4dp"
-            style="@style/MyCustomStyle"
+            android:background="@drawable/edit_text"
+
             android:hint="Password"/>
 
         <EditText
@@ -98,10 +115,14 @@
             android:layout_width="match_parent"
             android:layout_below="@+id/password"
             android:layout_height="40dp"
+
+            android:textColor="#000"
+            android:textColorHint="@color/focusable"
+            style="@style/ThemeOverlay.AppCompat.Light"
             android:layout_margin="10dp"
-            android:background="@drawable/edit_view_style"
             android:padding="4dp"
-            style="@style/MyCustomStyle"
+            android:background="@drawable/edit_text"
+
             android:hint="Repeat Password"/>
 
     </RelativeLayout>
@@ -121,7 +142,8 @@
         android:layout_width="wrap_content"
         android:background="@drawable/simple_button"
         android:layout_below="@+id/pgr_bar"
-
+        android:textColor="#fff"
+        style="@style/MyButton"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content" />

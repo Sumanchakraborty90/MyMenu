@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -41,6 +42,17 @@ public class ResturantReviewRatingAdapter extends ArrayAdapter {
 
         RatingBar rating_bar = (RatingBar)convertView.findViewById(R.id.rating_bar);
 
+        RelativeLayout row_item= (RelativeLayout)convertView.findViewById(R.id.row_item);
+
+        row_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        TextView txt_rating = (TextView)convertView.findViewById(R.id.txt_rating);
         txt_name.setTypeface(typeface);
         txt_decription.setTypeface(typeface);
         txt_name.setText(maps.get(position).get("RestaurantRatingAddby"));
@@ -49,6 +61,7 @@ public class ResturantReviewRatingAdapter extends ArrayAdapter {
 
         rating_bar.setRating(Float.valueOf(maps.get(position).get("RestaurantRatingRate")));
 
+        txt_rating.setText("( "+String.valueOf(maps.get(position).get("RestaurantRatingRate"))+" )");
 
         return convertView;
     }

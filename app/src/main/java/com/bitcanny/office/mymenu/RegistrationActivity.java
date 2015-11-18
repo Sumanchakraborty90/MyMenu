@@ -2,12 +2,16 @@ package com.bitcanny.office.mymenu;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +26,7 @@ public class RegistrationActivity extends ActionBarActivity {
 
     EditText txt_user_name,txt_ph_number,email,password,txt_repeat_password;
     String name,emailId,phNo,userPassword,repeatUserPassword;
+    Typeface typeface;
     ProgressBar pgr_bar;
     Button submit;
     Toolbar toolbar;
@@ -31,10 +36,15 @@ public class RegistrationActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+
+        }
         toolbar = (Toolbar) findViewById(R.id.app_tl);
         scrl_view= (ScrollView) findViewById(R.id.scrl_view);
         pgr_bar = (ProgressBar) findViewById(R.id.pgr_bar);
-
+        typeface = Typeface.createFromAsset(getAssets(),"fonts/ufonts.com_century-gothic.ttf");
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,6 +66,8 @@ public class RegistrationActivity extends ActionBarActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(RegistrationActivity.this, R.anim.animation);
+                submit.startAnimation(hyperspaceJumpAnimation);
                 hideKeyboard();
                 new Registration().execute();
             }
@@ -237,6 +249,17 @@ public class RegistrationActivity extends ActionBarActivity {
         if (view != null) {
             InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+
         }
     }
 }

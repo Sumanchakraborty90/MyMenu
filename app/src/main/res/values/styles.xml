@@ -4,9 +4,20 @@
     <style name="AppTheme" parent="AppTheme.Base">
         <!-- Customize your theme here. -->
     </style>
-    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryColorDark</item>
+
+        <item name="android:textColorPrimary">@color/backColor</item>
+        <item name="android:windowContentTransitions">true</item>
+
+        <item name="android:windowEnterTransition">@android:transition/slide_bottom</item>
+        <item name="android:windowExitTransition">@android:transition/slide_bottom</item>
+
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
 
 
 
@@ -16,14 +27,81 @@
 
     <style name="MyCustomStyle" parent="ThemeOverlay.AppCompat.Dark">
 
-        <item name="android:textColorPrimary">@color/textPrimary</item>
-        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textColorPrimary">@color/backColor</item>
+        <item name="android:textColor">@color/backColor</item>
+        <item name="android:textCursorDrawable">@color/primaryColor</item>
 
 
     </style>
     <style name="MyBack" >
 
         <item name="android:textColorPrimary">@drawable/grid_item_style</item>
+
+    </style>
+
+    <style name="MyButton">
+
+        <item name="android:textColorPrimary">@drawable/button_focusable</item>
+
+    </style>
+    <style name="spinner_style" >
+        <item name="android:background">@drawable/spin</item>
+        <item name="android:layout_marginLeft">1dp</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:paddingLeft">1dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textSize">1sp</item>
+    </style>
+
+    <style name="MyButtonStyle"  >
+        <item name="android:background">@drawable/shape</item>
+
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:paddingLeft">1dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/buton_text</item>
+        <item name="android:radius">5dp</item>
+
+    </style>
+
+    <style name="AppTheme.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <!-- Set proper title size -->
+        <item name="android:textSize">@dimen/abc_text_size_title_material_toolbar</item>
+        <!-- Set title color -->
+        <item name="android:textColor">@color/toolbar_title</item>
+       <!-- <item name="android:textStyle">@fonts/ufonts.com_century-gothic.ttf</item>-->
+    </style>
+    <style name="MyButtonStyle.selector">
+        <item name="android:background">@drawable/increment_decrement_focus</item>
+
+
+    </style>
+
+    <style name="MyButtonStyle.selector.color">
+        <item name="android:background">@drawable/my_gradient</item>
+
+        <item name="android:radius">5dp</item>
+    </style>
+    <style name="greenButon">
+
+        <item name="android:background">@drawable/simple_button</item>
+
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:paddingLeft">1dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/buton_text</item>
+        <item name="android:radius">5dp</item>
+
+    </style>
+    <style name="greenButon.secector">
+
+        <item name="android:background">@drawable/increment_decrement_focus</item>
 
     </style>
 

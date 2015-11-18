@@ -1,15 +1,24 @@
 package com.bitcanny.office.mymenu;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,19 +29,44 @@ public class MyPreviousResturants extends ActionBarActivity {
     List<Map<String,String>> maps;
     ListView listView;
     String resturantName,resturantAddress,resturantCode,resturantUrl;
+    private static String MYPREF = "mypref";
+    private static String EMAIL = "email";
+    private static  String PASSWORD = "password";
+    ProgressBar pgr_bar;
+    SharedPreferences sharedPreferences;
+    Toolbar toolbar;
+    Typeface typeface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_previous_resturants);
+        toolbar = (Toolbar) findViewById(R.id.app_tl);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        sharedPreferences = getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
         maps = new ArrayList<>();
         listView = (ListView) findViewById(R.id.list);
+        pgr_bar= (ProgressBar) findViewById(R.id.pgr_bar);
+        typeface = Typeface.createFromAsset(getAssets(),"fonts/ufonts.com_century-gothic.ttf");
+   /* try {
+        if (!sharedPreferences.getString("email", "").equals("")) {
+*/
+            new GetPreviousResturantsInfo().execute();
 
+        /*} else {
 
+            Intent intent = new Intent(MyPreviousResturants.this, LogInActivity.class);
+            startActivity(intent);
 
+        }
 
+    }catch (Exception e){
+
+        e.printStackTrace();
+    }*/
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_my_previous_resturants, menu);
@@ -52,7 +86,7 @@ public class MyPreviousResturants extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
     class GetPreviousResturantsInfo extends AsyncTask<Void,Void,Void>{
 
         String returnValue;
@@ -62,12 +96,49 @@ public class MyPreviousResturants extends ActionBarActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
+            if(returnValue.equals("success")) {
+                pgr_bar.setVisibility(View.GONE);
+                ArrayAdapter adapter = new MyPreviousResturantsAdapter(MyPreviousResturants.this,0,maps);
+
+                listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                        Intent intent = new Intent(MyPreviousResturants.this,ResturantEntryActivity.class);
+                        intent.putExtra("resturant_code",maps.get(position).get("resturantCode"));
+                        SharedPreferences settings =getSharedPreferences("mypref", Context.MODE_PRIVATE);
+                        settings.edit().clear().commit();
+                        deleteDatabase("MenuDb");
+                        try {
+                            File fdelete = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/MenuApp");
+                            if (fdelete.exists()) {
+                                if (fdelete.delete()) {
+                                    System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/MenuApp");
+                                } else {
+                                    System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/MenuApp");
+                                }
+                            }
+                        } catch (Exception e) {
+
+                            e.printStackTrace();
+                        }
+                        startActivity(intent);
+
+                    }
+                });
+            }else{
+
+                pgr_bar.setVisibility(View.GONE);
+            }
 
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pgr_bar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -77,36 +148,41 @@ public class MyPreviousResturants extends ActionBarActivity {
 
             JsonFunctions functions = new JsonFunctions(handler);
             try {
-                String json = functions.getPreviousResturant();
+                String json = functions.getPreviousresturantapi(sharedPreferences.getString("email", ""));
 
                 if (json != null) {
 
                     JSONObject object = new JSONObject(json);
 
-                    JSONObject resturantInfo = object.getJSONObject("resturantInfo");
+                    JSONObject resturantInfo = object.getJSONObject("restaurantInfo");
 
-                    JSONObject Info = resturantInfo.getJSONObject("Info");
+                 //   JSONObject Info = resturantInfo.getJSONObject("Info");
 
-                    JSONArray resturant = Info.getJSONArray("resturant");
+                    returnValue = resturantInfo.getString("type");
 
-                    for(int index = 0; index<resturant.length();index++){
+                    if(returnValue.equals("success")) {
 
-                        JSONObject jsonObject  = resturant.getJSONObject(index);
+                        JSONArray Info = resturantInfo.getJSONArray("Info");
 
-                        resturantName= jsonObject.getString("resturantName");
-                        resturantAddress = jsonObject.getString("resturantAddress");
-                        resturantCode = jsonObject.getString("resturantCode");
-                        resturantUrl= jsonObject.getString("resturantUrl");
+                        for (int index = 0; index < Info.length(); index++) {
 
-                        Map<String,String> map = new HashMap<>();
+                            JSONObject jsonObject = Info.getJSONObject(index);
 
-                        map.put("resturantName",resturantName);
-                        map.put("resturantAddress",resturantAddress);
-                        map.put("resturantCode",resturantCode);
-                        map.put("resturantUrl",resturantUrl);
+                            resturantName = jsonObject.getString("RestaurantName");
+                            resturantAddress = jsonObject.getString("RestaurantAddress");
+                            resturantCode = jsonObject.getString("RestaurantCode");
+                            resturantUrl = jsonObject.getString("RestaurantLogImage");
 
-                        maps.add(map);
+                            Map<String, String> map = new HashMap<>();
 
+                            map.put("resturantName", resturantName);
+                            map.put("resturantAddress", resturantAddress);
+                            map.put("resturantCode", resturantCode);
+                            map.put("resturantUrl", resturantUrl);
+
+                            maps.add(map);
+
+                        }
                     }
 
                 }

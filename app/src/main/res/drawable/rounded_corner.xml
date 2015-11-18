@@ -3,9 +3,9 @@
     <solid android:color="#ffffff"/>
 
     <stroke android:width="3dp"
-        android:color="#fff"/>
+        android:color="#1d000000"/>
 
-    <padding android:left="1dp"
+    <padding android:left="6dp"
         android:top="1dp"
         android:right="1dp"
         android:bottom="1dp"/>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/rel1"
     style="@style/AndroidImageSlider_Attractive_Rect_Blue"
     android:layout_height="match_parent">
 
@@ -22,7 +23,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
 
-
+            android:background="#fff"
 
 
             android:layout_height="wrap_content">
@@ -68,7 +69,7 @@
 
                 <TextView
                     android:id="@+id/txt_food_name"
-                    android:layout_width="150dp"
+                    android:layout_width="135dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
@@ -89,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txt_food_name"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="13dp"
                     android:layout_marginTop="5dp"
 
                     android:orientation="horizontal">
@@ -97,6 +98,7 @@
                         android:id="@+id/img_view1"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
+                        android:visibility="gone"
 
                         />
 
@@ -104,32 +106,32 @@
                         android:id="@+id/img_view2"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-
+                        android:visibility="gone"
                         />
                     <ImageView
                         android:id="@+id/img_view3"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-
+                        android:visibility="gone"
 
                         />
                     <ImageView
                         android:id="@+id/img_view4"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-
+                        android:visibility="gone"
                         />
                     <ImageView
                         android:id="@+id/img_view5"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-
+                        android:visibility="gone"
                         />
                     <ImageView
                         android:id="@+id/img_view6"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-
+                        android:visibility="gone"
                         />
                 </LinearLayout>
                 <!--  <TextView
@@ -160,15 +162,15 @@
                     android:text="Rs 70"
                     android:id="@+id/food_price" />
 
-                <ImageView
-                    android:id="@+id/img_share"
-                    android:layout_width="20dp"
+                <TextView
+                    android:id="@+id/txt_ordered"
+                    android:layout_width="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/share"
-                    android:visibility="invisible"
+                    android:textColor="#f2801b"
+                    android:text="Test"
                     android:layout_height="20dp" />
 
                 <RelativeLayout
@@ -183,7 +185,7 @@
                         android:layout_alignParentRight="true"
 
                         android:layout_marginRight="10dp"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="55dp"
                         android:layout_height="wrap_content">
 
 

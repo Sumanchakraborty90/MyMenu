@@ -51,6 +51,8 @@ public class MainMenuCategory extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.category_main);
+
+        //setupWindowAnimations();
         listView = (ListView)findViewById(R.id.list);
         toolbar = (Toolbar) findViewById(R.id.tool);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_lay);
@@ -183,4 +185,10 @@ public class MainMenuCategory extends ActionBarActivity {
             }
         }
     }
+
+   /* private void setupWindowAnimations() {
+        Explode explode = new Explode();
+        explode.setDuration(2000);
+        getWindow().setEnterTransition(explode);
+    }*/
 }

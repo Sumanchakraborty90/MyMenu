@@ -25,6 +25,7 @@ public class CategoryAdapter extends ArrayAdapter {
 	Map<String, String> map;
 	Typeface typeface;
 	PlaceOrderSqlHelperDao dao;
+	private int lastPosition = -1;
 
 
 	/*public CategoryAdapter(Context context,
@@ -54,6 +55,17 @@ public class CategoryAdapter extends ArrayAdapter {
 
 		TextView txt_doc_number = (TextView) convertView.findViewById(R.id.txt_doc_number);
 
+
+		/*CardView card_view = (CardView)convertView.findViewById(R.id.card_view);
+
+
+		card_view.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});*/
+
 		//RelativeLayout relativeLayout = (RelativeLayout)convertView.findViewById(R.id.rel2);
 		
 		map = list.get(position);
@@ -68,14 +80,18 @@ public class CategoryAdapter extends ArrayAdapter {
 			}).start();*/
 
 		try {
-			Picasso.with(context)/*.load(JsonFunctions.BASE_URL+map.get("CategoryImageURL"))*/
-					.load(new File(getFromSdcard("/MenuApp/MenuCategory/").get(position)))
-					.placeholder(R.mipmap.ic_launcher)
-					.fit()
-					.transform(new RoundedCorner(4, 0))
-					.error(R.mipmap.ic_launcher)
-					.into(imgView);
 
+			for(int index = 0;index<list.size();index++){
+			if(!list.get(position).get("CategoryName").equals(Utility.getItemImageName(getFromSdcard("/MenuApp/MenuCategory/").get(index)) )) {
+				Picasso.with(context)/*.load(JsonFunctions.BASE_URL+map.get("CategoryImageURL"))*/
+						.load(new File(getFromSdcard("/MenuApp/MenuCategory/").get(position)))
+						.placeholder(R.mipmap.ic_launcher)
+						.fit()
+						.transform(new RoundedCorner(4, 0))
+						.error(R.mipmap.ic_launcher)
+						.into(imgView);
+			}
+			}
 		}catch (Exception e){
 
 			e.printStackTrace();
@@ -92,8 +108,22 @@ public class CategoryAdapter extends ArrayAdapter {
 
 		button.setTypeface(typeface);
 
-		txt_doc_number.setText(String.valueOf(dao.getMenuDetails(map.get("CategoryName")).size())+" Items");
+		txt_doc_number.setText(String.valueOf(dao.getMenuDetails(map.get("CategoryName")).size()) + " Items");
 		txt_doc_number.setTypeface(typeface);
+
+		try {
+
+			/*ObjectAnimator animX = ObjectAnimator.ofFloat(convertView, "Y", -50f,50);
+			animX.setDuration(3000);
+			animX.start();*/
+
+		/*	Animation animation = AnimationUtils.loadAnimation(getContext(), (position > lastPosition) ? R.anim.down_from_top : R.anim.up_from_bottom);
+			convertView.startAnimation(animation);
+			lastPosition = position;*/
+		}catch (Exception e){
+
+			e.printStackTrace();
+		}
 		
 		return convertView;
 	}

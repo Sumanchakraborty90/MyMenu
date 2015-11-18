@@ -11,14 +11,16 @@ public class Utility {
 
   public static String  getItemImageName(String publicString){
 
-        String[] split = publicString.split("/");
 
-        String value = split[6];
+
+        String[] split = publicString.split("\\.");
+      String value = new StringBuilder(split[0]).reverse().toString();
+
 
       Log.d("imageNAmeBitcanny",value);
-        String[] split1 = value.split("\\.");
+        String[] split1 = value.split("/");
 
-        String value1 = split1[0];
+        String value1 =new StringBuilder(split1[0]).reverse().toString();
 
       return value1;
 

@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/white_bg"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
     tools:context="com.bitcanny.office.mymenu.OrderToCartActivity">
 
     <include layout="@layout/app_tool" android:id="@+id/app_tl"></include>
@@ -61,7 +62,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:background="#fff"
-        android:layout_height="250dp"
+        android:layout_height="245dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -73,24 +74,27 @@
         <RelativeLayout
             android:id="@+id/rel1"
             android:layout_width="match_parent"
-
+            android:layout_above="@+id/btn_purchase"
             android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:id="@+id/rel_crd"
                 android:layout_width="match_parent"
-
+                android:orientation="vertical"
                 android:layout_height="wrap_content">
             <android.support.v7.widget.CardView
                 android:id="@+id/cardview"
                 android:layout_width="match_parent"
-
+                android:background="#fff"
                 android:layout_height="wrap_content">
 
                 <RelativeLayout
                     android:id="@+id/rel2"
                     android:layout_width="match_parent"
-                    android:padding="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     android:layout_height="wrap_content">
 
                     <TextView
@@ -112,11 +116,12 @@
                         android:id="@+id/rel_lay3"
                         android:layout_width="match_parent"
 
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="5dp"
                         android:layout_height="wrap_content">
 
                         <TextView
+                            android:id="@+id/txt_sub_total"
                             android:layout_width="wrap_content"
                             android:text="Sub Total"
                             android:textColor="#000"
@@ -133,12 +138,20 @@
                             android:layout_height="wrap_content" />
                     </RelativeLayout>
 
+                        <ListView
+                            android:id="@+id/chargesList"
+                            android:layout_width="match_parent"
+
+                            android:layout_below="@+id/rel_lay3"
+
+                            android:layout_height="90dp"></ListView>
 
                     <RelativeLayout
                         android:id="@+id/rel_lay4"
                         android:layout_width="match_parent"
                         android:layout_below="@+id/rel_lay3"
                         android:layout_marginTop="15dp"
+                        android:visibility="gone"
                         android:layout_marginLeft="5dp"
                         android:layout_height="wrap_content">
 
@@ -162,7 +175,7 @@
                             android:id="@+id/rel_lay5"
                             android:layout_width="match_parent"
                             android:layout_below="@+id/rel_lay4"
-
+                            android:visibility="gone"
                             android:layout_marginTop="15dp"
                             android:layout_marginLeft="5dp"
                             android:layout_height="wrap_content">
@@ -215,41 +228,45 @@
 
 
             </android.support.v7.widget.CardView>
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/rel_lay8"
-                android:layout_width="match_parent"
-                android:layout_below="@+id/rel_crd"
-                android:padding="5dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginLeft="5dp"
-                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/rel_lay8"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/cardview"
+                    android:padding="5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_height="wrap_content">
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Amount Payable"
-                    android:textColor="#000"
-                    android:textSize="20dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/txt_amount_payable"
-                    android:layout_width="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:textColor="#000"
-                    android:textSize="20dp"
-                    android:text="Rs 800"
-                    android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/txt_amt_payable"
+                        android:layout_width="wrap_content"
+                        android:text="Amount Payable"
+                        android:textColor="#000"
+                        android:textSize="20dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/txt_amount_payable"
+                        android:layout_width="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="#000"
+                        android:textSize="20dp"
+                        android:text="Rs 800"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
             </RelativeLayout>
+
         </RelativeLayout>
 
         <Button
             android:id="@+id/btn_purchase"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-
+            android:textColor="#fff"
             android:layout_alignParentBottom="true"
             android:background="@drawable/button_focusable"
             android:text="Order"/>

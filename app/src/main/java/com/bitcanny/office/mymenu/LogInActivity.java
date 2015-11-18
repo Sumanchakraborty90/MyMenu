@@ -1,18 +1,24 @@
 package com.bitcanny.office.mymenu;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,12 +39,18 @@ public class LogInActivity extends ActionBarActivity {
     Toolbar toolbar;
     EditText email;
     EditText password;
-    TextView textView;
+    TextView textView,txt_registration;
+    RelativeLayout relative_lay_fb;
     Button submit;
+    CardView card_view_fb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log_in_popup);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        }
         toolbar = (Toolbar) findViewById(R.id.app_tl);
 
         setSupportActionBar(toolbar);
@@ -49,6 +61,9 @@ public class LogInActivity extends ActionBarActivity {
         password = (EditText)findViewById(R.id.password);
         progressBar = (ProgressBar)findViewById(R.id.pgr_bar);
         textView = (TextView) findViewById(R.id.txt_log_in);
+        txt_registration= (TextView) findViewById(R.id.txt_registration);
+        //card_view_fb = (CardView)findViewById(R.id.card_view_fb);
+        relative_lay_fb= (RelativeLayout)findViewById(R.id.relative_lay_fb);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/ufonts.com_century-gothic.ttf");
 
@@ -59,10 +74,32 @@ public class LogInActivity extends ActionBarActivity {
 
          submit = (Button)findViewById(R.id.submit);
 
+        txt_registration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(LogInActivity.this);
+                    Intent intent = new Intent(LogInActivity.this, RegistrationActivity.class);
+
+                    startActivity(intent,options.toBundle());
+
+                }else{
+
+                    Intent intent = new Intent(LogInActivity.this, RegistrationActivity.class);
+
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+
+                }
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(LogInActivity.this, R.anim.animation);
+                submit.startAnimation(hyperspaceJumpAnimation);
                 hideKeyboard();
                 new LogIn().execute();
 
@@ -80,7 +117,16 @@ public class LogInActivity extends ActionBarActivity {
 
             }
         });
+        relative_lay_fb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(LogInActivity.this,FaceBookActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 
     public void putSharedPreference(String email,String password){
 
@@ -125,8 +171,8 @@ public class LogInActivity extends ActionBarActivity {
 
                             putSharedPreference(user_email, user_password);
 
-                            Intent intent = getIntent();
-                            finish();
+                           /* Intent intent = getIntent();
+                            finish();*/
                         }else{
 
 
@@ -155,7 +201,7 @@ public class LogInActivity extends ActionBarActivity {
             user_email = email.getText().toString();
             user_password = password.getText().toString();
 
-         value =  getValidation(user_email,user_password);
+             value =  getValidation(user_email,user_password);
 
             if(value == true){
 
@@ -168,13 +214,18 @@ public class LogInActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(JSONObject aVoid) {
             super.onPostExecute(aVoid);
+            progressBar.setVisibility(View.GONE);
 
             try {
                 if (returnVal.equals("success")) {
                     Toast.makeText(LogInActivity.this,"You are Successfully logged in..",Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
 
+                    Intent intent = new Intent();
+
+                    setResult(1, intent);
                     finish();
+                    //finish();
 
                 } else {
 
@@ -231,5 +282,18 @@ public class LogInActivity extends ActionBarActivity {
             InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(LogInActivity.this,ResturantInfo.class);
+
+        startActivity(intent);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        }
+
     }
 }

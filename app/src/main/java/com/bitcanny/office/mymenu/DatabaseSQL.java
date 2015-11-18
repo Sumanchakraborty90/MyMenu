@@ -109,6 +109,7 @@ public class DatabaseSQL {
     private static  String order_item_quantity = "order_item_quantity";
     private static  String user_id = "user_id";
     private static String  order_item_image_url = "order_item_image_url";
+    private static String  user_order_flag = "user_order_flag";
 
 
 
@@ -289,14 +290,39 @@ public class DatabaseSQL {
 
     public String getAllOrder(){
 
-        String returnVal = "Select * from "+ PLACEORDER +" where order_item_quantity <> 0";
+        String returnVal = "Select   order_id,order_name,order_item_price,order_item_quantity,user_id,order_item_image_url,user_order_flag,MenuID from "+ PLACEORDER +" GROUP BY MenuID"/*" where order_item_quantity <> 0"*/;
 
         return returnVal;
 
 
     }
 
+    public String getAllOrderOfOtherUsers(){
 
+        String returnVal = "Select   DISTINCT order_name,order_item_price,order_item_quantity,user_id,order_item_image_url,user_order_flag,MenuID from "+ PLACEORDER +" where user_order_flag =? and order_name <> (Select order_name from " +PLACEORDER+" where user_order_flag=? )";
+
+        return returnVal;
+
+
+    }
+
+    /*private static String order_id = "order_id";
+    private static String order_name = "order_name";
+    private static String order_item_price = "order_item_price";
+    private static String order_item_quantity = "order_item_quantity";
+    private static String user_id = "user_id";
+    private static String order_item_image_url = "order_item_image_url";
+    private static String  user_order_flag = "user_order_flag";
+
+    orderToCartAdapterModel.setOrder_name(cursor.getString(1));
+    orderToCartAdapterModel.setOrder_item_price(cursor.getString(2));
+    orderToCartAdapterModel.setOrder_item_quantity(cursor.getString(3));
+    orderToCartAdapterModel.setUser_id(cursor.getString(4));
+    orderToCartAdapterModel.setOrder_item_image_url(cursor.getString(5));
+    orderToCartAdapterModel.setUser_order_flag(cursor.getString(6));
+
+    orderToCartAdapterModel.setMenu_id(cursor.getString(7));
+*/
 
     public String getSingleResturantDetails(){
 
@@ -307,7 +333,7 @@ public class DatabaseSQL {
 
     public String getFrontEndMenuSql(){
 
-        String returnVal = "Select * from "+FRONTENDMENU;
+        String returnVal = "Select DISTINCT  front_end_menu_name from "+FRONTENDMENU;
 
         return returnVal;
     }

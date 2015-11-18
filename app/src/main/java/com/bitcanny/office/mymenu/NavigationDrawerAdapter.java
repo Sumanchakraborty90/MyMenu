@@ -47,11 +47,11 @@ public class NavigationDrawerAdapter extends ArrayAdapter {
         TextView txt_mnu_name= (TextView) convertView.findViewById(R.id.txt_mnu_name);
 
 
-        rel1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            rel1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            }
+                }
         });
         if(position == 0){
 
@@ -78,26 +78,42 @@ public class NavigationDrawerAdapter extends ArrayAdapter {
             }
 
 
+            if (maps.get(position).getFront_end_menu_name().equals("Sign up")){
+
+                if (sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals("")) {
+
+                    lay2.setVisibility(View.VISIBLE);
+
+                }else{
+
+                    lay2.setVisibility(View.GONE);
+
+                }
+
+
+
+            }
+
             if (maps.get(position).getFront_end_menu_name().equals("Sign in")) {
 
-    if(txt_mnu_name.getText().equals("Sign in")) {
-        if (sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals("")) {
+         if(txt_mnu_name.getText().equals("Sign in")) {
+            if (sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals("")) {
 
 
-            txt_mnu_name.setText("Sign in");
+                 txt_mnu_name.setText("Sign in");
                    /* Intent intent = new Intent(context, LogInActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(intent);*/
 
-        } else {
+              } else {
 
                   /*  sharedPreferences.edit().clear().commit();*/
 
             // SharedPreferences preferences = getActivity().getSharedPreferences("Mypref", 0);
-            txt_mnu_name.setText("Sign out");
+                 txt_mnu_name.setText("Sign out");
             //putSharedPreference("","");
-        }
-    }else if(txt_mnu_name.getText().equals("Sign out")){
+              }
+        }else if(txt_mnu_name.getText().equals("Sign out")){
 
         if (sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals("")) {
 

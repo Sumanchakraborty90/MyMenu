@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by OFFICE on 22-07-2015.
@@ -30,26 +31,35 @@ public class CartOrderAdapter extends ArrayAdapter {
     List<OrderToCartAdapterModel> maps;
     Typeface typeface;
     TextView txt_amount_payable,sub_total;
+    List<TagInfoModel> tagInfoModels;
     static int totalAmt=0;
     static  Double totalAmountMoney=0.0;
     static int pos = 0;
     boolean check = false;
     int flag = 0;
     PlaceOrderSqlHelperDao dao;
+    List<Map<String,String>> previousOrder;
     private static String MYPREF = "mypref";
     private static String EMAIL = "email";
     private static  String PASSWORD = "password";
     SharedPreferences sharedPreferences;
+    List<TaxChargesModel> chargesValue;
 
-
-    public CartOrderAdapter(Context context, int resource, List<OrderToCartAdapterModel> maps,TextView sub_total,TextView txt_amount_payable) {
+    public CartOrderAdapter(Context context, int resource, List<OrderToCartAdapterModel> maps,TextView sub_total,TextView txt_amount_payable, List<TaxChargesModel> chargesValue,List<Map<String,String>> previousOrder) {
         super(context, resource, maps);
         this.maps = maps;
         this.context = context;
         this.sub_total = sub_total;
         this.txt_amount_payable = txt_amount_payable;
+        this.chargesValue = chargesValue;
+        tagInfoModels = new ArrayList<>();
+        this.previousOrder = previousOrder;
         dao = new PlaceOrderSqlHelperDao(context);
         sharedPreferences = context.getSharedPreferences(MYPREF,Context.MODE_PRIVATE);
+        typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ufonts.com_century-gothic.ttf");
+
+        txt_amount_payable.setTypeface(typeface);
+        sub_total.setTypeface(typeface);
         //HorizontalNumberPicker1.
 
     }
@@ -64,9 +74,36 @@ public class CartOrderAdapter extends ArrayAdapter {
 
         pos = position;
 
+        RelativeLayout rel1 = (RelativeLayout) convertView.findViewById(R.id.rel1);
         ImageView plus = (ImageView) convertView.findViewById(R.id.btn_plus);
         ImageView minus = (ImageView) convertView.findViewById(R.id.btn_minus);
         final TextView edit_text = (TextView)convertView.findViewById(R.id.edit_text);
+
+        TextView txt_ordered = (TextView) convertView.findViewById(R.id.txt_ordered);
+        edit_text.setTypeface(typeface);
+
+        Log.d("previousOrderCart", previousOrder.size() + "");
+
+
+        for(int index = 0;index<previousOrder.size();index++) {
+            if (maps.get(position).getOrder_name().equals(previousOrder.get(index).get("OrderMenuItemName"))) {
+                txt_ordered.setVisibility(View.VISIBLE);
+                txt_ordered.setText(String.valueOf(previousOrder.get(index).get("OrderMenuItemQty"))+" Ordered");
+
+            }
+        }
+
+      /*  if(maps.get(position).getUser_order_flag().equals("0") && maps.get(position).getOrder_item_quantity().equals("0")){
+
+
+            rel1.setVisibility(View.GONE);
+
+            // edit_text.setText(String.valueOf("0"));
+
+
+        }*/
+
+
 /*
         ImageView img_icon = (ImageView) convertView.findViewById(R.id.img_icon);
 
@@ -90,9 +127,17 @@ public class CartOrderAdapter extends ArrayAdapter {
         txt_price.setText("Rs. "+maps.get(position).get("order_item_price"));
 
 
-*/
+*/  /* map.put("MenuItemName",userCart.get(index).getOrder_name());
+        map.put("MenuItemPrice",userCart.get(index).getOrder_item_price());
+        map.put("OrderMenuItemQty",userCart.get(index).getOrder_item_quantity());
+        map.put("MenuItemIMage", userCart.get(index).getOrder_item_image_url());
+        map.put("menu_id", userCart.get(index).getMenu_id());*/
 
+
+        tagInfoModels = dao.getTagDetails(maps.get(position).getMenu_id());
+        Log.d("TagINfoModelSize",tagInfoModels.size()+"");
         totalAmountMoney = Double.valueOf(maps.get(position).getOrder_item_price());
+        CartOrderActivity.setAmountPayable(chargesValue, GridViewAdapter.mnyAmt, txt_amount_payable);
      //   Log.d("numberOfitems selected",maps.get(position).get("selectedItems"));
 
 
@@ -107,35 +152,38 @@ public class CartOrderAdapter extends ArrayAdapter {
         }
 
         //edit_text.setText(String.valueOf(totalAmt));
-        Log.d("actual selected items", maps.get(position).getOrder_item_quantity());
+       // Log.d("actual selected items", maps.get(position).getOrder_item_quantity());
 
 
         edit_text.setText(String.valueOf(dao.getUpdatedSelectedItems(maps.get(position).getOrder_name())));
         //edit_text.setText(maps.get(position).getOrder_item_quantity());
+
+        Log.d("quantity",maps.get(position).getOrder_name()+"------------>"+String.valueOf(dao.getUpdatedSelectedItems(maps.get(position).getOrder_name())));
 
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                Log.d("clicked","plus");
+                Log.d("clicked", "plus");
 
-                int value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name())+1;
+                int value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name()) + 1;
 
-                Log.d("value",value+"");
+                Log.d("value", value + "");
                 GridViewAdapter.mnyAmt = GridViewAdapter.mnyAmt + Double.valueOf(maps.get(position).getOrder_item_price());
                 txt_amount_payable.setText(String.valueOf(GridViewAdapter.mnyAmt));
+                CartOrderActivity.setAmountPayable(chargesValue, GridViewAdapter.mnyAmt, txt_amount_payable);
                 GridViewAdapter.amount++;
 
-                putSharedPreference(String.valueOf(GridViewAdapter.amount),String.valueOf(GridViewAdapter.mnyAmt));
-                sub_total.setText(String.valueOf(GridViewAdapter.mnyAmt));
+                putSharedPreference(String.valueOf(GridViewAdapter.amount), String.valueOf(GridViewAdapter.mnyAmt));
+                sub_total.setText("Rs. " + String.valueOf(GridViewAdapter.mnyAmt));
                 dao.updateSelectedItems(maps.get(position).getOrder_name(), String.valueOf(value));
                 dao.updateSelectedItemsInMenu(maps.get(position).getOrder_name(), String.valueOf(value));
-                 value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name());
-                    edit_text.setText(String.valueOf(value));
-                    // totalAmt = value;
-                }
-            });
+                value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name());
+                edit_text.setText(String.valueOf(value));
+                // totalAmt = value;
+            }
+        });
 
      /*   plus.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -159,31 +207,33 @@ public class CartOrderAdapter extends ArrayAdapter {
             minus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("clicked","minus");
+                    Log.d("clicked", "minus");
 
-                    if(dao.getUpdatedSelectedItems(maps.get(position).getOrder_name())>0) {
+                    if (dao.getUpdatedSelectedItems(maps.get(position).getOrder_name()) > 0) {
                         int value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name()) - 1;
 
                         Log.d("value", value + "");
-                        if( GridViewAdapter.amount>0) {
+                        if (GridViewAdapter.amount > 0) {
                             GridViewAdapter.amount--;
 
                         }
-                        if(GridViewAdapter.mnyAmt>0) {
+                        if (GridViewAdapter.mnyAmt > 0) {
                             GridViewAdapter.mnyAmt = GridViewAdapter.mnyAmt - Double.valueOf(maps.get(position).getOrder_item_price());
                         }
 
-                        putSharedPreference(String.valueOf(GridViewAdapter.amount),String.valueOf(GridViewAdapter.mnyAmt));
-                            txt_amount_payable.setText(String.valueOf(GridViewAdapter.mnyAmt));
-                        sub_total.setText(String.valueOf(GridViewAdapter.mnyAmt));
+                        putSharedPreference(String.valueOf(GridViewAdapter.amount), String.valueOf(GridViewAdapter.mnyAmt));
+                        txt_amount_payable.setText(String.valueOf(GridViewAdapter.mnyAmt));
+
+                        CartOrderActivity.setAmountPayable(chargesValue, GridViewAdapter.mnyAmt, txt_amount_payable);
+                        sub_total.setText("Rs. " + String.valueOf(GridViewAdapter.mnyAmt));
                         dao.updateSelectedItems(maps.get(position).getOrder_name(), String.valueOf(value));
                         dao.updateSelectedItemsInMenu(maps.get(position).getOrder_name(), String.valueOf(value));
                         value = dao.getUpdatedSelectedItems(maps.get(position).getOrder_name());
-                    edit_text.setText(String.valueOf(value));
+                        edit_text.setText(String.valueOf(value));
 
+                    }
                 }
-            }
-        });
+            });
 
        /// HorizontalBean bean = new HorizontalBean(Integer.valueOf(maps.get(position).getOrder_item_quantity()));
 
@@ -219,7 +269,8 @@ public class CartOrderAdapter extends ArrayAdapter {
 
         food_price.setText(String.valueOf(maps.get(position).getOrder_item_price()));
 
-        Log.d("image_url",maps.get(position).getOrder_item_image_url());
+      /*  Log.d("image_url", maps.get(position).getOrder_item_image_url());
+        Log.d("image_url", maps.get(position).getMenu_id());*/
 
 
         ImageView img_view1 = (ImageView)convertView.findViewById(R.id.img_view1);
@@ -236,7 +287,7 @@ public class CartOrderAdapter extends ArrayAdapter {
 
         /*View vv = parent.getRootView();
         final TextView texto = (TextView) vv.findViewById(R.id.txt_item_select);*/
-
+       // tagInfoModels = dao.getTagDetails(maps.get(position).getmenu);
 
 
 
@@ -301,12 +352,52 @@ public class CartOrderAdapter extends ArrayAdapter {
 
             e.printStackTrace();
         }
-        img_view1.setImageResource(R.drawable.veg);
+       /* img_view1.setImageResource(R.drawable.veg);
         img_view2.setImageResource(R.drawable.non_veg);
         img_view3.setImageResource(R.drawable.fish);
         img_view4.setImageResource(R.drawable.high_chilli);
         img_view5.setImageResource(R.drawable.chef_reco);
-        img_view6.setImageResource(R.drawable.high_rated);
+        img_view6.setImageResource(R.drawable.high_rated);*/
+
+
+        try {
+
+
+            for(int index = 0;index<tagInfoModels.size();index++){
+                // if (tagInfoModels.get(index).getChili().equals("1")) {
+
+                if (tagInfoModels.get(index).getChili().equals("1")) {
+                    img_view4.setVisibility(View.VISIBLE);
+                    img_view4.setImageResource(R.drawable.high_chilli);
+
+
+                }
+                if (tagInfoModels.get(index).getFish().equals("1")) {
+                    img_view3.setVisibility(View.VISIBLE);
+                    img_view3.setImageResource(R.drawable.fish);
+
+                }
+
+                if (tagInfoModels.get(index).getVeg().equals("1")) {
+                    img_view1.setVisibility(View.VISIBLE);
+                    img_view1.setImageResource(R.drawable.veg);
+
+                }
+
+                if (tagInfoModels.get(index).getNonveg().equals("1")) {
+                    img_view2.setVisibility(View.VISIBLE);
+                    img_view2.setImageResource(R.drawable.non_veg);
+
+                }
+            }
+            //  }
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+
+
 
         return convertView;
     }

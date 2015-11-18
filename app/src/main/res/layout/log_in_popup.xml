@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/pop_up_lay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -49,30 +50,57 @@
 
         <EditText
             android:id="@+id/email"
-            style="@style/MyCustomStyle"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_margin="10dp"
-            android:background="@drawable/edit_view_style"
+            android:padding="4dp"
+            android:background="@drawable/edit_text"
             android:hint="Email/LogIn Id"
-            android:padding="4dp" />
+
+            android:textColor="#000"/>
 
         <EditText
             android:id="@+id/password"
-            style="@style/MyCustomStyle"
+
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_below="@+id/email"
             android:layout_margin="10dp"
-            android:background="@drawable/edit_view_style"
+            android:paddingLeft="10dp"
+            android:textColor="#000"
+            android:background="@drawable/edit_text"
             android:hint="Password"
             android:padding="4dp" />
 
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rel_frgt_pass"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/rel2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_registration"
+            android:layout_width="wrap_content"
+            android:text="Not a user? Register Now"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/txt_frgt_pass"
+            android:layout_width="wrap_content"
+           android:layout_alignParentRight="true"
+            android:text="Forgot password"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
     <ProgressBar
         android:id="@+id/pgr_bar"
         style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_below="@+id/rel2"
+        android:layout_below="@+id/rel_frgt_pass"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
         android:layout_width="wrap_content"
@@ -81,12 +109,56 @@
     <Button
         android:id="@+id/submit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_below="@+id/pgr_bar"
         android:layout_centerHorizontal="true"
+        android:textColor="#fff"
 
         android:layout_marginTop="20dp"
-        android:background="@drawable/button_focusable"
+        android:background="@drawable/simple_button"
         android:text="Submit" />
 
+    <!--<android.support.v7.widget.CardView
+        android:id="@+id/card_view_fb"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="5dp"
+        android:layout_below="@+id/submit"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+
+        android:layout_alignParentBottom="true"
+
+        android:layout_width="match_parent">-->
+        <RelativeLayout
+            android:id="@+id/relative_lay_fb"
+            android:layout_width="match_parent"
+            android:background="#3b5998"
+            android:layout_below="@+id/submit"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_vertical"
+            style="?android:attr/selectableItemBackground"
+            android:layout_height="wrap_content">
+    <ImageButton
+        android:id="@+id/facebok_logId"
+        android:layout_width="wrap_content"
+        android:background="@drawable/fuman"
+       android:layout_alignParentLeft="true"
+        android:layout_marginLeft="4dp"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/facebok_logId"
+                android:layout_marginLeft="5dp"
+                android:textColor="#fff"
+                android:textSize="20dp"
+
+                android:text="LogIn With Facebook"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+  <!--  </android.support.v7.widget.CardView>-->
 </RelativeLayout>

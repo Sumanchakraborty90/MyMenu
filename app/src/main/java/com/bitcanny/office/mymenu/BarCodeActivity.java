@@ -2,12 +2,9 @@ package com.bitcanny.office.mymenu;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -120,12 +117,16 @@ public class BarCodeActivity extends ActionBarActivity implements ZBarScannerVie
         // Do something with the result here
         Log.v("TAG", rawResult.getContents()); // Prints scan results
         Log.v("TAG", rawResult.getBarcodeFormat().getName()); // Prints the scan format (qrcode, pdf417 etc.)
-        Toast.makeText(BarCodeActivity.this,rawResult.getContents()+"",Toast.LENGTH_LONG).show();
-        if(rawResult.getContents().equals("100001")){
+       // Toast.makeText(BarCodeActivity.this,rawResult.getContents()+"",Toast.LENGTH_LONG).show();
+      /*  if(rawResult.getContents().equals("100001")){*/
 
-           new CheckResturantCode().execute();
+         Intent intent = new Intent(BarCodeActivity.this,ResturantEntryActivity.class);
 
-        }
+        intent.putExtra("resturant_code",rawResult.getContents());
+        startActivity(intent);
+        finish();
+
+     /*   }*/
        // qrValue = rawResult.getContents();
 
     }

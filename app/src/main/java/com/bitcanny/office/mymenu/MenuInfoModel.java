@@ -21,11 +21,11 @@ public class MenuInfoModel {
     }
 
 
-    public MenuInfoModel(String category_name, String avg_rating, String menuItemDesc,  String menuItemImageURL,String selectedItem, String menuItemIsChefRecommend, String menuItemName, String menuItemPrice, String tagName) {
+    public MenuInfoModel(String category_name, String avg_rating, String menuItemDesc,String menuItemID,  String  menuItemImageURL,String selectedItem, String menuItemIsChefRecommend, String menuItemName, String menuItemPrice, String tagName) {
         this.category_name = category_name;
         this.avg_rating = avg_rating;
         MenuItemDesc = menuItemDesc;
-       // MenuItemID = menuItemID;
+        MenuItemID = menuItemID;
         MenuItemImageURL = menuItemImageURL;
         SelectedItem = selectedItem;
         MenuItemIsChefRecommend = menuItemIsChefRecommend;

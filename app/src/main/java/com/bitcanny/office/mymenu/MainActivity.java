@@ -4,14 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -19,6 +23,10 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,7 +38,7 @@ import java.util.Map;
 
 public class MainActivity extends ActionBarActivity {
 
-
+    List<Map<String,String>> previousOrder = Collections.emptyList();
     private static String MYPREF = "mypref";
     private static String EMAIL = "email";
     private static  String PASSWORD = "password";
@@ -53,9 +61,15 @@ public class MainActivity extends ActionBarActivity {
     private static String MENUITEMPRICE = "MenuItemPrice";
     private static String TAGNAME = "TagName";
     private static String TYPE = "type";
+
+    String OrderMenuItemID ;
+
+    String OrderMenuItemName ;
+
+    String OrderMenuItemQty ;
     static Map<Integer,Integer> selectedPositions ;
     SubCategoryImageModel model;
-
+    boolean viewFlag;
     List<Map<String,String>> imageMap;
       double moneyAmount = 0.0;
     double totalAmt = 0.0;
@@ -70,24 +84,31 @@ public class MainActivity extends ActionBarActivity {
     ImageView img_add_to_cart_arrow;
 
     ArrayList<String> namesImage ;
-
+    public static boolean showFlag = false;
     ImageView img_plus ;
 
     ImageView img_minus ;
     List<OrderToCartAdapterModel> orderToCartAdapterModels;
 
-
-   private Toolbar toolbar;
+    static double totalPayableAmt = 0.0;
+    private Toolbar toolbar;
     ProgressBar progressBar;
     DrawerLayout drawerLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
+    String OrderMenuItemPrice;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+      //  Intent intent = getIntent();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        }
         orderToCartAdapterModels = new ArrayList<>();
         HorizontalNumberPicker.finalAmount = 0;
         listVal = new ArrayList<>();
         namesImage= new ArrayList<>();
+        previousOrder = new ArrayList<>();
         moneyAmount= 0.0;
         selectedPositions = new HashMap<>();
         toolbar = (Toolbar) findViewById(R.id.tval);
@@ -103,7 +124,9 @@ public class MainActivity extends ActionBarActivity {
         img_add_to_cart_arrow = (ImageView) findViewById(R.id.img_add_to_cart_arrow);
         txt_price_val.setText("₹ " + String.valueOf(0));
         add_to_cart = (RelativeLayout) findViewById(R.id.add_to_cart);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        view.setVerticalScrollBarEnabled(false);
+        view.setHorizontalScrollBarEnabled(false);
     /*    Resources res = getResources();
         Drawable drawable = res.getDrawable(R.color.non_focusable);
     //    LinearLayout linearLayout = (LinearLayout)findViewById(R.id.GameLayout);
@@ -122,9 +145,46 @@ public class MainActivity extends ActionBarActivity {
         category_name = bundle.getString("category_name");*/
 
         category_name = sharedPreferences.getString("category_name", "");
+        getSupportActionBar().setTitle(category_name);
+
+        new GetPreviousOrder().execute(ResturantInfo.globalResturantId, sharedPreferences.getString("tableCode", ""));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
 
 
+                new GetPreviousOrder().execute(ResturantInfo.globalResturantId, sharedPreferences.getString("tableCode", ""));
+            }
+        });
+
+
+
+        Bundle bundle = getIntent().getExtras();
+
+        try {
+            viewFlag = bundle.getBoolean("view_flag");
+
+           // if(viewFlag != Boolean.getBoolean("")){
+
+                putViewFlagSharedPreference(viewFlag);
+           /* }*/
+
+
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+        viewFlag = Boolean.valueOf(sharedPreferences.getString("viewFlag", ""));
+
+        if(viewFlag == false){
+
+
+            add_to_cart.setVisibility(View.GONE);
+        }
         try{
+
         for(int index =0;index<getFromSdcard("/MenuApp/MenuItemGrid/").size();index++ ){
 
             namesImage.add(index,Utility.getItemImageName(getFromSdcard("/MenuApp/MenuItemGrid/").get(index)));
@@ -146,6 +206,8 @@ public class MainActivity extends ActionBarActivity {
             txt_price_val.setText(String.valueOf(GridViewAdapter.mnyAmt));*/
             txt_item_select.setText(String.valueOf(sharedPreferences.getString("selectedItems", "")));
             txt_price_val.setText(String.valueOf(sharedPreferences.getString("totalAmt", "")));
+
+
         }catch (Exception e){
 
             e.printStackTrace();;
@@ -155,9 +217,53 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(MainActivity.this,CartOrderActivity.class);
+               /*ObjectAnimator animX = ObjectAnimator.ofFloat(add_to_cart, "rotation",0,360);
+               // ObjectAnimator animY = ObjectAnimator.ofFloat(add_to_cart, "ScaleY", 30f);
+                AnimatorSet animSetXY = new AnimatorSet();
+                animSetXY.playTogether(animX);
+                animSetXY.setDuration(5000);
+                animSetXY.start();
 
-                startActivity(intent);
+                AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(MainActivity.this, R.anim.down_from_top);
+                set.setTarget(add_to_cart);
+                set.start();*/
+
+                Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.animation);
+                add_to_cart.startAnimation(hyperspaceJumpAnimation);
+
+
+                hyperspaceJumpAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                        if (dao.getSelectedItemsSummation() > 0) {
+                            Intent intent = new Intent(MainActivity.this, CartOrderActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+
+                            Toast.makeText(MainActivity.this, "Please order at least one item", Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+               /* swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        new GetSubCategory().execute();
+                    }
+                });*/
 
               /*  getRefinedArrayList(ResturantInfo.orderedItems);
 
@@ -462,7 +568,7 @@ public class MainActivity extends ActionBarActivity {
                         map.put("MenuItemName",menuInfoModelList.get(index).getMenuItemName());
                         map.put("MenuItemPrice",menuInfoModelList.get(index).getMenuItemPrice());
                         map.put("TagName",menuInfoModelList.get(index).getTagName());
-
+                        map.put("menu_id",String.valueOf(menuInfoModelList.get(index).getMenu_id()));
 
 
                         list.add(map);
@@ -492,8 +598,12 @@ public class MainActivity extends ActionBarActivity {
                 listVal.add(1);
             }
 
-            GridViewAdapter adapter =  new GridViewAdapter(MainActivity.this, list,listVal,txt_item_select,txt_price_val);
+            txt_item_select.setText(String.valueOf(sharedPreferences.getString("selectedItems", "")));
+            txt_price_val.setText("Rs. " + String.valueOf(sharedPreferences.getString("totalAmt", "")));
+            GridViewAdapter adapter =  new GridViewAdapter(MainActivity.this, list,listVal,txt_item_select,txt_price_val,viewFlag,previousOrder);
             view.setAdapter(adapter);
+
+
 
 
 
@@ -961,7 +1071,17 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    @Override
+    public void putViewFlagSharedPreference(boolean viewFlag){
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("viewFlag", String.valueOf(viewFlag));
+     //   editor.putString("password",password);
+
+        editor.commit();
+
+    }
+
+ /*   @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -971,7 +1091,7 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logIn) {
 
-           /* if(click == false){*/
+           *//* if(click == false){*//*
 
             if(sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password","").equals("")) {
 
@@ -983,7 +1103,7 @@ public class MainActivity extends ActionBarActivity {
                 sharedPreferences.edit().clear().commit();
                 item.setIcon(R.drawable.login148);
             }
-          /*  }else{
+          *//*  }else{
                 {
                     item.setIcon(R.drawable.login148);
                     resturant_info.setAlpha(1);
@@ -992,7 +1112,7 @@ public class MainActivity extends ActionBarActivity {
                 }
 
             }
-*/
+*//*
 
 
             return true;
@@ -1002,7 +1122,7 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+*/
 
 
 
@@ -1134,5 +1254,178 @@ public class MainActivity extends ActionBarActivity {
 
 
         return list1;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(MainActivity.this,MyMainCategory.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("view_flag", viewFlag);
+        startActivity(intent);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        }
+       // overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        finish();
+
+    }
+
+    class GetPreviousOrder extends AsyncTask<String,Void,Void>{
+
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            ServiceHandler handler = new ServiceHandler();
+
+            JsonFunctions functions = new JsonFunctions(handler);
+
+            String json = functions.getPreviousOrder(params[0],params[1]);
+
+
+          //  {"orderInfo":{"orderItemInfo":[{"OrderMenuID":"1","OrderMenuOrderID":"1","OrderMenuItemID":"1","OrderMenuItemName":"KAIRI PANI","OrderMenuItemQty":"6","OrderMenuItemPrice":"150","OrderMenuAddon":"2015-10-15 06:30:14"},{"OrderMenuID":"2","OrderMenuOrderID":"1","OrderMenuItemID":"2","OrderMenuItemName":"KESARIA LASSI","OrderMenuItemQty":"1","OrderMenuItemPrice":"100","OrderMenuAddon":"2015-10-15 06:30:35"}],"grossAmount":1000,"totalQty":7}}
+            try {
+                if (json != null) {
+
+                    JSONObject jsonObject = new JSONObject(json);
+
+
+                    JSONObject orderInfoData = jsonObject.getJSONObject("orderInfo");
+
+                    JSONArray orderInfo =orderInfoData.getJSONArray("orderItemInfo");
+
+                   /* String grossAmount = orderInfoData.getString("grossAmount");
+                    String totalQty = orderInfoData.getString("totalQty");*/
+
+                    for(int index = 0;index<orderInfo.length();index++){
+
+                        JSONObject object = orderInfo.getJSONObject(index);
+
+                         OrderMenuItemID = object.getString("OrderMenuItemID");
+
+                         OrderMenuItemName = object.getString("OrderMenuItemName");
+
+                        Log.d("OrderMenuItemName",OrderMenuItemName);
+
+                         OrderMenuItemQty = object.getString("OrderMenuItemQty");
+
+                        Log.d("OrderMenuItemQty",OrderMenuItemQty);
+
+                      OrderMenuItemPrice = object.getString("OrderMenuItemPrice");
+
+                        String OrderMenuItemID= object.getString("OrderMenuItemID");
+
+                        Map<String,String> map = new HashMap<>();
+
+                        map.put("OrderMenuItemID",OrderMenuItemID);
+                        map.put("OrderMenuItemName",OrderMenuItemName);
+                        map.put("OrderMenuItemQty",OrderMenuItemQty);
+
+                       // map.put("OrderMenuItemID", OrderMenuItemID);
+
+
+                       // map.put("OrderMenuItemName", OrderMenuItemName);
+                        map.put("OrderMenuItemPrice", OrderMenuItemPrice);
+
+                     /*   try {
+                            dao.deleteOrderedItems();
+                   *//* for (int index = 0; index < dao.getAllOrderDetails().size(); index++) {
+                        //int i=dao.updateSelectedItemsInMenu(dao.getAllOrderDetails().get(index).getOrder_name(),"0");
+                       // dao.updateSelectedItems(dao.getAllOrderDetails().get(index).getOrder_name(), "0");
+                        //Log.d("updated",i+"");
+
+                    }*//*
+                        }catch (Exception e){
+
+                            e.printStackTrace();
+                        }*/
+
+
+                        previousOrder.add(map);
+
+
+
+                    }
+
+
+                }
+            }catch (Exception e){
+
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if(showFlag == false){
+
+                for(int index = 0;index<previousOrder.size();index++) {
+                    if (dao.getAllOrderDetails().size() < previousOrder.size()) {
+
+                        Log.d("refreshedMyMainMenu", "mainActivity");
+                        dao.removeIfExists(previousOrder.get(index).get("OrderMenuItemName"));
+                        dao.addToOrderValue(previousOrder.get(index).get("OrderMenuItemName"), previousOrder.get(index).get("OrderMenuItemPrice"), "0", "", previousOrder.get(index).get("OrderMenuItemID"), "1");
+                    }
+                }
+
+                showFlag = true;
+            }
+
+
+          /*  for(int index1 = 0; index1<previousOrder.size();index1++) {
+
+                for (int index = 0 ;index<dao.getAllOrderDetails().size();index++){
+
+                if(!previousOrder.get(index1).get("OrderMenuItemName").contains(dao.getAllOrderDetails().get(index).getOrder_name()))
+                {*/
+
+                  /*  Log.d("previousOrderMENUiD",previousOrder.get(index).get("OrderMenuItemID"));
+                    Log.d("CURENTOrderMENUiD",previousOrderToInputIntoTable.get(index1).getMenu_id());*/
+
+                    // dao.addToOrderValue(OrderMenuItemName, OrderMenuItemPrice, "0", "", OrderMenuItemID,"1");
+
+                    // dao.addToOrderValue(OrderMenuItemName, OrderMenuItemPrice, "0", "", OrderMenuItemID,"1");
+                    //    previousOrderToInputIntoTable.add(new OrderToCartAdapterModel(String order_name, String order_item_price, String order_item_quantity, String user_id, String order_item_image_url, String menu_id, String user_order_flag));
+
+
+                   // previousOrderToInputIntoTable.add(new OrderToCartAdapterModel(previousOrder.get(index).get("OrderMenuItemName"), previousOrder.get(index).get("OrderMenuItemPrice"), "0", sharedPreferences.getString("email", ""), "",previousOrder.get(index).get("OrderMenuItemID"),"1"));
+
+               /*     break;
+                }else {
+
+
+
+
+
+
+                }
+
+                 }*/
+
+
+            //}
+
+           // if(dao.getAllOrderDetails().size()<)
+
+
+            swipeRefreshLayout.setRefreshing(false);
+
+
+        }
+
+
     }
 }

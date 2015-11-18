@@ -1,8 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/resturant_review_rating"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     tools:context="com.bitcanny.office.mymenu.ResturantReviewRating">
 
     <include layout="@layout/app_tool" android:id="@+id/app_tl"></include>
@@ -35,22 +38,36 @@
         android:layout_below="@+id/rel1"
         android:visibility="gone"
         android:layout_height="wrap_content" />
-    <ListView
-        android:id="@+id/list"
+
+
+
+
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_below="@+id/pgr_bar"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:layout_above="@+id/rel3"
+
+        android:layout_above="@+id/buton_lay"
+        android:layout_height="match_parent">
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+
         android:layout_height="wrap_content">
 
     </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-    <RelativeLayout
+<RelativeLayout
         android:id="@+id/rel3"
         android:layout_width="match_parent"
        android:layout_alignParentBottom="true"
         android:background="#fff"
+    android:visibility="gone"
         android:layout_margin="5dp"
         android:layout_height="wrap_content">
 
@@ -100,16 +117,38 @@
                 android:layout_width="match_parent"
                 android:maxLines="3"
                 android:layout_height="50dp" />
+            </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/buton_lay"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+
+      android:background="#fff"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_centerVertical="true"
+            android:elevation="5dp"
+            app:cardCornerRadius="4dp"
+            android:layout_height="wrap_content">
+
 
             <Button
                 android:id="@+id/btn_submit"
-                android:layout_width="wrap_content"
-                android:layout_below="@id/edit_text"
-                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:textColor="#fff"
+
+                android:layout_centerHorizontal="true"
                 android:background="@drawable/button_focusable"
-                android:text="Submit"
+
+                android:text="Submit Review And Rating"
                 android:layout_height="wrap_content" />
+        </android.support.v7.widget.CardView>
         </RelativeLayout>
 
-    </RelativeLayout>
+
 </RelativeLayout>

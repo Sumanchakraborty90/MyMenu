@@ -11,12 +11,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,8 +51,9 @@ public class NavigationDrawerFragment extends Fragment {
     SharedPreferences sharedPreferences;
     PlaceOrderSqlHelperDao dao;
     List<FrontEndMenuModel> list=Collections.emptyList();
+    static ArrayAdapter adapter;
 
-    MyNavigationAdapter adapter;
+   // MyNavigationAdapter adapter;
     private DrawerLayout drawerLayout1;
     private RecyclerView recyclerView;
     public ActionBarDrawerToggle drawerToggle;
@@ -86,11 +89,11 @@ public class NavigationDrawerFragment extends Fragment {
 
 
 
-        ArrayAdapter adapter = new NavigationDrawerAdapter(getActivity(),0,dao.getAllMenu());
+         adapter = new NavigationDrawerAdapter(getActivity(),0,dao.getAllMenu());
 
         listView.setAdapter(adapter);
 
-
+     //   adapter.notifyDataSetChanged();
         return root;
     }
 
@@ -102,6 +105,10 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+             /*   Drawer drawer;
+                drawer = (Drawer)getActivity().getSupportFragmentManager().findFragmentById(R.id.theid);*/
+              drawerLayout1.closeDrawer(Gravity.LEFT);
+              //  drawerLayout1.updateViewLayout();
                 if (position == 0) {
                     // drawerLayout1.openDrawer(Gravity.LEFT);
                     Intent intent = new Intent(getActivity(), MyMainCategory.class);
@@ -115,10 +122,14 @@ public class NavigationDrawerFragment extends Fragment {
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 */
+                    if (dao.getAllOrderDetails().size() > 0) {
+                        Intent intent = new Intent(getActivity(), CartOrderActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    } else {
 
-                    Intent intent = new Intent(getActivity(), CartOrderActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                        Toast.makeText(getActivity(), "Please select atleast one item", Toast.LENGTH_LONG).show();
+                    }
                 } else if (position == 3) {
 
                     ResturantEntryActivity.list1.clear();
@@ -155,27 +166,68 @@ public class NavigationDrawerFragment extends Fragment {
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);*/
 
-                    Intent intent = new Intent(getActivity(), ResturantEntryActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
-
-                } else if (position == 5) {
-
-                    Intent intent = new Intent(getActivity(), RegistrationActivity.class);
+                    Intent intent = new Intent(getActivity(), MyPreviousResturants.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
 
+
+                } else if (position == 5) {
+
+
+                    if(dao.getAllMenu().get(position).getFront_end_menu_name().equals("Sign In")) {
+
+
+                        if (sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals("")) {
+
+                            Intent intent = new Intent(getActivity(), LogInActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+
+                            //  updateDrawer();
+
+                            adapter = new NavigationDrawerAdapter(getActivity(),0,dao.getAllMenu());
+
+                            listView.setAdapter(adapter);
+                           // drawerLayout1.closeDrawer(listView);
+
+                        } else {
+
+                            putSharedPreference("", "");
+                        }
+
+                    }else{
+                        Intent intent = new Intent(getActivity(), RegistrationActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+
                 } else if (position == 6) {
 
-                   if (sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals("")) {
+                    if (sharedPreferences.getString("email", "").equals("") || sharedPreferences.getString("password", "").equals("")) {
+
 
                         Intent intent = new Intent(getActivity(), LogInActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                        startActivityForResult(intent, 1);
+
+
+
+
+                      //  updateDrawer();
+
+                        adapter = new NavigationDrawerAdapter(getActivity(),0,dao.getAllMenu());
+
+                        listView.setAdapter(adapter);
+                       // drawerLayout1.closeDrawer(listView);
+
+
+
+
+
 
                     } else {
 
-                       putSharedPreference("","");
+                        putSharedPreference("", "");
                     }
 
 
@@ -200,11 +252,21 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+
+                adapter = new NavigationDrawerAdapter(getActivity(),0,dao.getAllMenu());
+
+                listView.setAdapter(adapter);
+
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+
+
+                adapter = new NavigationDrawerAdapter(getActivity(),0,dao.getAllMenu());
+
+                listView.setAdapter(adapter);
             }
 
            /* @Override
@@ -255,5 +317,10 @@ public class NavigationDrawerFragment extends Fragment {
 
         editor.commit();
 
+    }
+    public static void updateDrawer() {
+        adapter.notifyDataSetChanged();
+        // OR
+      //  mListView.setAdapter(new AdapterShowingTheRightTitles());
     }
 }
